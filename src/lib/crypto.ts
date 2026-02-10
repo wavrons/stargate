@@ -83,3 +83,70 @@ export async function decryptSecret(pin: string, encryptedData: string): Promise
     throw new Error('Invalid PIN or corrupted data');
   }
 }
+
+// ── Binary encryption for files (images) ──
+
+/**
+ * Derives a deterministic encryption key from a trip ID + app secret.
+ * This means all images in a trip share the same key, derived from the trip ID.
+ */
+export async function deriveTripKey(tripId: string, appSecret: string): Promise<CryptoKey> {
+  const salt = new TextEncoder().encode(`stargate-trip-${tripId}`);
+  return deriveKey(appSecret, salt);
+}
+
+/**
+ * Encrypts binary data (e.g. an image ArrayBuffer).
+ * Returns a Uint8Array containing iv + ciphertext.
+ */
+export async function encryptBinary(key: CryptoKey, data: ArrayBuffer): Promise<Uint8Array> {
+  const iv = window.crypto.getRandomValues(new Uint8Array(IV_SIZE));
+  const ciphertext = await window.crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    data
+  );
+
+  const combined = new Uint8Array(IV_SIZE + ciphertext.byteLength);
+  combined.set(iv, 0);
+  combined.set(new Uint8Array(ciphertext), IV_SIZE);
+  return combined;
+}
+
+/**
+ * Decrypts binary data previously encrypted with encryptBinary.
+ * Returns the original ArrayBuffer.
+ */
+export async function decryptBinary(key: CryptoKey, encrypted: Uint8Array): Promise<ArrayBuffer> {
+  const iv = encrypted.slice(0, IV_SIZE);
+  const ciphertext = encrypted.slice(IV_SIZE);
+
+  return window.crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    ciphertext
+  );
+}
+
+/**
+ * Convert Uint8Array to base64 string (for GitHub API).
+ */
+export function uint8ToBase64(bytes: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+/**
+ * Convert base64 string to Uint8Array (from GitHub API).
+ */
+export function base64ToUint8(b64: string): Uint8Array {
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}

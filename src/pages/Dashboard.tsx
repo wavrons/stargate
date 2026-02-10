@@ -6,6 +6,7 @@ import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { supabase, type Trip } from '../lib/supabase';
 import { ShareModal } from '../components/ShareModal';
+import { ConfirmModal } from '../components/ConfirmModal';
 
 export function Dashboard() {
   const { t } = useTranslation();
@@ -15,6 +16,7 @@ export function Dashboard() {
   const [isCreating, setIsCreating] = useState(false);
   const [newTripTitle, setNewTripTitle] = useState('');
   const [shareTripId, setShareTripId] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTrips();
@@ -64,10 +66,7 @@ export function Dashboard() {
     }
   };
 
-  const handleDeleteTrip = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent navigation
-    if (!confirm('Are you sure you want to delete this trip?')) return;
-
+  const handleDeleteTrip = async (id: string) => {
     try {
       const { error } = await supabase
         .from('trips')
@@ -81,7 +80,7 @@ export function Dashboard() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (loading) return null;
 
   return (
     <div className="mx-auto max-w-6xl p-6">
@@ -119,7 +118,7 @@ export function Dashboard() {
           <div 
             key={trip.id} 
             className="group relative cursor-pointer rounded-xl border bg-white p-6 shadow-sm transition-all hover:shadow-md"
-            onClick={() => navigate(`/trip/${trip.id}`)}
+            onClick={() => navigate(`/trip/${trip.id}/board`)}
           >
             <h3 className="mb-2 text-lg font-semibold text-gray-900">{trip.title}</h3>
             <p className="text-sm text-gray-500">{t('dashboard.created')} {new Date(trip.created_at).toLocaleDateString()}</p>
@@ -138,7 +137,10 @@ export function Dashboard() {
               <Button 
                 variant="danger" 
                 size="sm" 
-                onClick={(e) => handleDeleteTrip(trip.id, e)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPendingDeleteId(trip.id);
+                }}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -159,6 +161,20 @@ export function Dashboard() {
           onClose={() => setShareTripId(null)} 
         />
       )}
+
+      <ConfirmModal
+        open={!!pendingDeleteId}
+        title="Delete trip?"
+        message="Are you sure you want to delete this trip? This cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          if (pendingDeleteId) void handleDeleteTrip(pendingDeleteId);
+          setPendingDeleteId(null);
+        }}
+        onCancel={() => setPendingDeleteId(null)}
+      />
     </div>
   );
 }

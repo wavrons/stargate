@@ -15,8 +15,8 @@ export interface TravelData {
   lastUpdated: string;
 }
 
-const REPO_OWNER = 'YOUR_GITHUB_USERNAME';
-const REPO_NAME = 'travel-planner-data';
+const REPO_OWNER = 'AlNino77';
+const REPO_NAME = 'gate_records';
 const FILE_PATH = 'data/travel-data.json';
 const BRANCH = 'main';
 

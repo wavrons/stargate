@@ -10,7 +10,16 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(
   supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder'
+  supabaseAnonKey || 'placeholder',
+  {
+    auth: {
+      persistSession: true,
+      storageKey: 'stargate-auth',
+      storage: localStorage,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+  }
 );
 
 export type Trip = {
@@ -19,7 +28,10 @@ export type Trip = {
   title: string;
   start_date?: string;
   end_date?: string;
+  version: number;
+  storage_used_bytes: number;
   created_at: string;
+  updated_at: string;
 };
 
 export type TripItem = {
@@ -31,6 +43,34 @@ export type TripItem = {
   link?: string;
   notes?: string;
   image_url?: string;
+  created_at: string;
+};
+
+export type ColorTag = 'red' | 'orange' | 'green' | 'blue' | 'purple' | null;
+
+export const COLOR_TAG_OPTIONS: { value: ColorTag; hex: string; label: string }[] = [
+  { value: 'red',    hex: '#ef4444', label: 'Red' },
+  { value: 'orange', hex: '#f97316', label: 'Orange' },
+  { value: 'green',  hex: '#22c55e', label: 'Green' },
+  { value: 'blue',   hex: '#3b82f6', label: 'Blue' },
+  { value: 'purple', hex: '#a855f7', label: 'Purple' },
+];
+
+export type BoardItem = {
+  id: string;
+  trip_id: string;
+  user_id: string;
+  type: 'link' | 'image' | 'video' | 'note';
+  title: string;
+  description?: string;
+  url?: string;
+  thumbnail_url?: string;
+  file_path?: string;
+  file_size_bytes?: number;
+  color_tag: ColorTag;
+  source_meta?: Record<string, unknown>;
+  sort_order: number;
+  group_label?: string;
   created_at: string;
 };
 

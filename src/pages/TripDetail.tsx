@@ -1,9 +1,12 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
+import { ConfirmModal } from '../components/ConfirmModal';
+import { RefreshBanner } from '../components/RefreshBanner';
+import { useTripVersionPoll } from '../hooks/useTripVersionPoll';
 import { supabase, type Trip, type TripItem } from '../lib/supabase';
 
 export function TripDetail() {
@@ -22,12 +25,12 @@ export function TripDetail() {
     notes: '',
     image_url: '',
   });
+  const [pendingDeleteItemId, setPendingDeleteItemId] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (id) fetchTripData(id);
-  }, [id]);
+  const { stale, acknowledge } = useTripVersionPoll(id);
 
-  const fetchTripData = async (tripId: string) => {
+  const fetchTripData = useCallback(async (tripId: string) => {
     try {
       // Fetch trip details
       const { data: tripData, error: tripError } = await supabase
@@ -51,11 +54,22 @@ export function TripDetail() {
 
     } catch (error) {
       console.error('Error fetching data:', error);
-      navigate('/'); // Redirect if not found/access denied
+      navigate('/dashboard'); // Redirect if not found/access denied
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    if (id) fetchTripData(id);
+  }, [id, fetchTripData]);
+
+  const handleRefresh = useCallback(() => {
+    if (id) {
+      void fetchTripData(id);
+      acknowledge();
+    }
+  }, [id, fetchTripData, acknowledge]);
 
   const onAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,12 +100,11 @@ export function TripDetail() {
       setIsFormOpen(false);
     } catch (error) {
       console.error('Error adding item:', error);
-      alert('Failed to add item. You might only have viewer access.');
+      setErrorMsg('Failed to add item. You might only have viewer access.');
     }
   };
 
   const onDelete = async (itemId: string) => {
-    if (!confirm('Delete this item?')) return;
     try {
       const { error } = await supabase
         .from('trip_items')
@@ -102,7 +115,7 @@ export function TripDetail() {
       setItems(items.filter(i => i.id !== itemId));
     } catch (error) {
       console.error('Error deleting item:', error);
-      alert('Failed to delete item. You might only have viewer access.');
+      setErrorMsg('Failed to delete item. You might only have viewer access.');
     }
   };
 
@@ -116,13 +129,14 @@ export function TripDetail() {
     return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
   }, [items]);
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (loading) return null;
   if (!trip) return <div className="p-6">Trip not found</div>;
 
   return (
     <div className="mx-auto max-w-6xl p-6">
+      <RefreshBanner visible={stale} onRefresh={handleRefresh} />
       <div className="mb-6">
-        <Button variant="secondary" size="sm" onClick={() => navigate('/')} className="mb-4">
+        <Button variant="secondary" size="sm" onClick={() => navigate('/dashboard')} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Dashboard
         </Button>
@@ -183,7 +197,7 @@ export function TripDetail() {
                   )}
                   <div className="mb-2 flex justify-between">
                     <h3 className="font-semibold">{item.name}</h3>
-                    <Button variant="danger" size="sm" onClick={() => onDelete(item.id)}>
+                    <Button variant="danger" size="sm" onClick={() => setPendingDeleteItemId(item.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -202,6 +216,31 @@ export function TripDetail() {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        open={!!pendingDeleteItemId}
+        title="Delete item?"
+        message="Are you sure you want to delete this item?"
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          if (pendingDeleteItemId) void onDelete(pendingDeleteItemId);
+          setPendingDeleteItemId(null);
+        }}
+        onCancel={() => setPendingDeleteItemId(null)}
+      />
+
+      <ConfirmModal
+        open={!!errorMsg}
+        title="Error"
+        message={errorMsg ?? ''}
+        confirmLabel="OK"
+        cancelLabel="Close"
+        variant="primary"
+        onConfirm={() => setErrorMsg(null)}
+        onCancel={() => setErrorMsg(null)}
+      />
     </div>
   );
 }

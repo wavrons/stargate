@@ -25,7 +25,7 @@ export function Itinerary() {
     })();
   }, []);
 
-  if (loading) return <div className="p-6 text-sm text-gray-600">Loading...</div>;
+  if (loading) return null;
 
   return (
     <div className="mx-auto max-w-4xl p-6">

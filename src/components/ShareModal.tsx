@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { X, UserPlus, Trash2 } from 'lucide-react';
 import { Button } from './Button';
 import { Input } from './Input';
+import { Select } from './Select';
 import { supabase, type TripMember } from '../lib/supabase';
 
 interface ShareModalProps {
@@ -84,8 +85,8 @@ export function ShareModal({ tripId, onClose }: ShareModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+    <div className="themed-modal__backdrop">
+      <div className="themed-modal__panel" style={{ maxWidth: 480 }}>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-900">Share Trip</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
@@ -104,14 +105,14 @@ export function ShareModal({ tripId, onClose }: ShareModalProps) {
                 onChange={e => setNewEmail(e.target.value)}
               />
             </div>
-            <select
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm"
+            <Select
               value={role}
-              onChange={e => setRole(e.target.value as 'viewer' | 'editor')}
-            >
-              <option value="viewer">Viewer</option>
-              <option value="editor">Editor</option>
-            </select>
+              onChange={v => setRole(v as 'viewer' | 'editor')}
+              options={[
+                { value: 'viewer', label: 'Viewer' },
+                { value: 'editor', label: 'Editor' },
+              ]}
+            />
           </div>
           {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
           <Button type="submit" className="mt-2 w-full" disabled={sharing}>
@@ -123,7 +124,7 @@ export function ShareModal({ tripId, onClose }: ShareModalProps) {
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-700">Access List</h3>
           {loading ? (
-            <p className="text-sm text-gray-500">Loading...</p>
+            <div className="h-6" />
           ) : members.length === 0 ? (
             <p className="text-sm text-gray-500">No one else has access.</p>
           ) : (

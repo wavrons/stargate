@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
-import { Copy, Trash2, Check, X } from 'lucide-react';
+import { Copy, Trash2, Check, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Select } from '../components/Select';
+import { ConfirmModal } from '../components/ConfirmModal';
 
 type ProfileRow = {
   user_id: string;
@@ -56,7 +58,8 @@ const AIRLINES: Array<{ code: string; name: string }> = [
 
 export function Account() {
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<'profile' | 'ff' | 'admin' | 'support'>('profile');
+  const [tab, setTab] = useState<'profile' | 'look_and_feel' | 'admin' | 'support'>('profile');
+  const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
   const [deactivating, setDeactivating] = useState(false);
@@ -107,18 +110,20 @@ export function Account() {
     key: typeof cityTheme;
     name: string;
     description: string;
+    tagline: string;
     primaryColor: string;
     bgColor: string;
+    image: string;
     adminOnly?: boolean;
   }> = [
-    { key: 'taipei', name: 'Taipei', description: 'Brutalist Tech', primaryColor: '#999999', bgColor: '#121212' },
-    { key: 'rio', name: 'Rio de Janeiro', description: 'Organic Growth', primaryColor: '#61BB46', bgColor: '#F0FFF0' },
-    { key: 'los_angeles', name: 'Los Angeles', description: 'Cinematic Retro', primaryColor: '#FDBD2C', bgColor: '#3D2B1F' },
-    { key: 'amsterdam', name: 'Amsterdam', description: 'Modern Heritage', primaryColor: '#F58220', bgColor: '#FAF9F6' },
-    { key: 'tokyo', name: 'Tokyo', description: 'Precise Editorial', primaryColor: '#333333', bgColor: '#FFFFFF' },
-    { key: 'seoul', name: 'Seoul', description: 'Cyber-Pop', primaryColor: '#963D97', bgColor: '#0B0114' },
-    { key: 'santorini', name: 'Santorini', description: 'Fluid/Coastal', primaryColor: '#009DDC', bgColor: '#FFFFFF' },
-    { key: 'arjeplog', name: 'Arjeplog', description: 'The Hidden Forest', primaryColor: '#F0EEE9', bgColor: '#1B3022', adminOnly: true },
+    { key: 'taipei', name: 'Taipei', description: 'Brutalistic Tech', tagline: 'High-contrast, industrially efficient, with sharp edges.', primaryColor: '#999999', bgColor: '#121212', image: `${import.meta.env.BASE_URL}themes/taipei.jpg` },
+    { key: 'rio', name: 'Rio de Janeiro', description: 'Organic Growth', tagline: 'Lush, vibrant, and alive with natural energy.', primaryColor: '#61BB46', bgColor: '#F0FFF0', image: `${import.meta.env.BASE_URL}themes/rio_de_janeiro.jpg` },
+    { key: 'los_angeles', name: 'Los Angeles', description: 'Cinematic Retro', tagline: 'Warm tones, golden light, and vintage glamour.', primaryColor: '#FDBD2C', bgColor: '#3D2B1F', image: `${import.meta.env.BASE_URL}themes/los_angeles.jpg` },
+    { key: 'amsterdam', name: 'Amsterdam', description: 'Modern Heritage', tagline: 'Clean lines meet timeless Dutch craftsmanship.', primaryColor: '#F58220', bgColor: '#FAF9F6', image: `${import.meta.env.BASE_URL}themes/amsterdam.jpg` },
+    { key: 'tokyo', name: 'Tokyo', description: 'Precise Editorial', tagline: 'Minimalist precision with bold typographic contrast.', primaryColor: '#333333', bgColor: '#FFFFFF', image: `${import.meta.env.BASE_URL}themes/tokyo.jpg` },
+    { key: 'seoul', name: 'Seoul', description: 'Cyber-Pop', tagline: 'Neon-lit, playful, and unapologetically futuristic.', primaryColor: '#963D97', bgColor: '#0B0114', image: `${import.meta.env.BASE_URL}themes/seoul.jpg` },
+    { key: 'santorini', name: 'Santorini', description: 'Fluid/Coastal', tagline: 'Breezy, sun-washed, and effortlessly serene.', primaryColor: '#009DDC', bgColor: '#FFFFFF', image: `${import.meta.env.BASE_URL}themes/santorini.jpg` },
+    { key: 'arjeplog', name: 'Arjeplog', description: 'The Hidden Forest', tagline: 'Deep, quiet, and rooted in Nordic wilderness.', primaryColor: '#F0EEE9', bgColor: '#1B3022', image: `${import.meta.env.BASE_URL}themes/arjeplog.jpg`, adminOnly: true },
   ];
 
   const getCityLabel = (key: typeof cityTheme) => cityThemes.find((t) => t.key === key)?.name ?? key;
@@ -419,7 +424,6 @@ export function Account() {
   };
 
   const deleteCode = async (id: string) => {
-    if (!confirm('Delete this invite code?')) return;
     setError('');
     setMessage('');
 
@@ -472,9 +476,7 @@ export function Account() {
     }
   };
 
-  if (loading) {
-    return <div className="p-6 text-sm text-gray-600">Loading...</div>;
-  }
+  if (loading) return null;
 
   return (
     <div className="mx-auto max-w-3xl p-6">
@@ -484,8 +486,8 @@ export function Account() {
         <Button variant={tab === 'profile' ? 'primary' : 'secondary'} onClick={() => setTab('profile')}>
           Profile
         </Button>
-        <Button variant={tab === 'ff' ? 'primary' : 'secondary'} onClick={() => setTab('ff')}>
-          Frequent Flyer Info
+        <Button variant={tab === 'look_and_feel' ? 'primary' : 'secondary'} onClick={() => setTab('look_and_feel')}>
+          Look and Feel
         </Button>
         {isAdmin && (
           <Button variant={tab === 'admin' ? 'primary' : 'secondary'} onClick={() => setTab('admin')}>
@@ -500,6 +502,7 @@ export function Account() {
       {error && <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>}
       {message && <div className="mb-4 rounded-lg bg-green-50 p-3 text-sm text-green-700">{message}</div>}
 
+      {/* ── Profile tab (Basic + Frequent Flyer) ── */}
       {tab === 'profile' && (
         <div className="space-y-8">
           <section className="rounded-xl border bg-white p-6 shadow-sm">
@@ -539,123 +542,176 @@ export function Account() {
             </div>
           </section>
 
+          {/* Frequent Flyer — now under Profile */}
           <section className="rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">City Theme</h2>
-            <p className="mb-4 text-sm text-gray-600">
-              Choose a city theme to customize your experience. Each theme changes the look and feel of the entire site and your avatar.
-            </p>
-            <div className="grid gap-3 md:grid-cols-2">
-              {cityThemes
-                .filter((theme) => (theme.adminOnly ? isAdmin : true))
-                .map((theme) => (
-                  <button
-                    key={theme.key}
-                    type="button"
-                    onClick={() => setCityTheme(theme.key)}
-                    className={`flex items-center gap-3 rounded-lg border-2 p-4 text-left transition-all ${
-                      cityTheme === theme.key
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
-                  >
-                    <div
-                      className="h-12 w-12 flex-shrink-0 rounded-lg"
-                      style={{ backgroundColor: theme.primaryColor }}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-900">{theme.name}</span>
-                        {theme.adminOnly && (
-                          <span className="rounded bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800">
-                            Admin
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-600">{theme.description}</p>
-                    </div>
-                  </button>
-                ))}
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">Frequent Flyer Info</h2>
+
+            <div className="grid gap-3 md:grid-cols-3">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Airline</label>
+                <Select
+                  value={airlineCode}
+                  onChange={(next) => {
+                    setAirlineCode(next);
+                    const match = AIRLINES.find((a) => a.code === next);
+                    if (match) setAirlineName(match.name);
+                  }}
+                  placeholder="Select airline…"
+                  options={AIRLINES.map((a) => ({ value: a.code, label: `${a.code} — ${a.name}` }))}
+                />
+                <p className="mt-1 text-xs text-gray-500">Or type airline code below.</p>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Airline code</label>
+                <Input value={airlineCode} onChange={(e) => setAirlineCode(e.target.value)} placeholder="e.g. BR" />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Member number</label>
+                <Input value={memberNumber} onChange={(e) => setMemberNumber(e.target.value)} placeholder="123456789" />
+              </div>
             </div>
+
+            <div className="mt-3">
+              <label className="mb-1 block text-sm font-medium text-gray-700">Airline name (optional)</label>
+              <Input value={airlineName} onChange={(e) => setAirlineName(e.target.value)} placeholder="Airline name" />
+            </div>
+
             <div className="mt-4">
-              <Button onClick={() => void saveCityTheme()} disabled={savingTheme}>
-                {savingTheme ? 'Saving…' : 'Save Theme'}
-              </Button>
+              <Button onClick={() => void addFrequentFlyer()}>Add</Button>
+            </div>
+
+            <div className="mt-6 space-y-2">
+              {ffRows.map((r) => (
+                <div key={r.id} className="flex items-center justify-between rounded-lg border p-3">
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-gray-900">
+                      {r.airline_code}{r.airline_name ? ` — ${r.airline_name}` : ''}
+                    </div>
+                    <div className="font-mono text-sm text-gray-700">{r.member_number}</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="secondary" size="sm" onClick={() => void copyMemberNumber(r.member_number)}>
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() =>
+                        setConfirmAction({
+                          title: 'Delete frequent flyer?',
+                          message: `Remove ${r.airline_code} account ${r.member_number}?`,
+                          onConfirm: () => void deleteFrequentFlyer(r.id),
+                        })
+                      }
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              {ffRows.length === 0 && <div className="text-sm text-gray-500">No frequent flyer accounts yet.</div>}
             </div>
           </section>
         </div>
       )}
 
-      {tab === 'ff' && (
-        <section className="rounded-xl border bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">Frequent Flyer Info</h2>
+      {/* ── Look and Feel tab (City Theme carousel) ── */}
+      {tab === 'look_and_feel' && (
+        <div className="space-y-8">
+          <section className="rounded-xl border bg-white p-6 shadow-sm">
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">City Theme</h2>
+            <p className="mb-4 text-sm text-gray-600">
+              Choose a city theme to customize your experience. Each theme changes the look and feel of the entire site and your avatar.
+            </p>
 
-          <div className="grid gap-3 md:grid-cols-3">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Airline</label>
-              <select
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm"
-                value={airlineCode}
-                onChange={(e) => {
-                  const next = e.target.value;
-                  setAirlineCode(next);
-                  const match = AIRLINES.find((a) => a.code === next);
-                  if (match) setAirlineName(match.name);
-                }}
-              >
-                <option value="">Select…</option>
-                {AIRLINES.map((a) => (
-                  <option key={a.code} value={a.code}>
-                    {a.code} — {a.name}
-                  </option>
-                ))}
-              </select>
-              <p className="mt-1 text-xs text-gray-500">Or type airline code below.</p>
-            </div>
+            {(() => {
+              const visible = cityThemes.filter((t) => (t.adminOnly ? isAdmin : true));
+              const currentIdx = visible.findIndex((t) => t.key === cityTheme);
+              const idx = currentIdx === -1 ? 0 : currentIdx;
+              const theme = visible[idx];
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Airline code</label>
-              <Input value={airlineCode} onChange={(e) => setAirlineCode(e.target.value)} placeholder="e.g. BR" />
-            </div>
+              const goPrev = () => {
+                const prev = (idx - 1 + visible.length) % visible.length;
+                setCityTheme(visible[prev].key);
+              };
+              const goNext = () => {
+                const next = (idx + 1) % visible.length;
+                setCityTheme(visible[next].key);
+              };
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Member number</label>
-              <Input value={memberNumber} onChange={(e) => setMemberNumber(e.target.value)} placeholder="123456789" />
-            </div>
-          </div>
+              return (
+                <div className="theme-carousel">
+                  <div className="theme-carousel__viewport">
+                    <button
+                      type="button"
+                      onClick={goPrev}
+                      className="theme-carousel__arrow theme-carousel__arrow--left"
+                      aria-label="Previous theme"
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
 
-          <div className="mt-3">
-            <label className="mb-1 block text-sm font-medium text-gray-700">Airline name (optional)</label>
-            <Input value={airlineName} onChange={(e) => setAirlineName(e.target.value)} placeholder="Airline name" />
-          </div>
+                    <div className="theme-carousel__slide">
+                      <div className="theme-carousel__image-wrapper">
+                        <img
+                          src={theme.image}
+                          alt={`${theme.name} theme`}
+                          className="theme-carousel__image"
+                          draggable={false}
+                        />
+                        <div className="theme-carousel__overlay">
+                          <div className="theme-carousel__city-name">{theme.name}</div>
+                          <div className="theme-carousel__slogan">{theme.description}</div>
+                          <div className="theme-carousel__tagline">{theme.tagline}</div>
+                        </div>
+                      </div>
+                    </div>
 
-          <div className="mt-4">
-            <Button onClick={() => void addFrequentFlyer()}>Add</Button>
-          </div>
-
-          <div className="mt-6 space-y-2">
-            {ffRows.map((r) => (
-              <div key={r.id} className="flex items-center justify-between rounded-lg border p-3">
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold text-gray-900">
-                    {r.airline_code}{r.airline_name ? ` — ${r.airline_name}` : ''}
+                    <button
+                      type="button"
+                      onClick={goNext}
+                      className="theme-carousel__arrow theme-carousel__arrow--right"
+                      aria-label="Next theme"
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
                   </div>
-                  <div className="font-mono text-sm text-gray-700">{r.member_number}</div>
+
+                  <div className="theme-carousel__dots">
+                    {visible.map((t, i) => (
+                      <button
+                        key={t.key}
+                        type="button"
+                        onClick={() => setCityTheme(t.key)}
+                        className={`theme-carousel__dot ${i === idx ? 'theme-carousel__dot--active' : ''}`}
+                        aria-label={t.name}
+                      />
+                    ))}
+                  </div>
+
+                  {theme.adminOnly && (
+                    <div className="mt-2 text-center">
+                      <span className="rounded bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800">
+                        Admin
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="mt-4 text-center">
+                    <Button onClick={() => void saveCityTheme()} disabled={savingTheme}>
+                      {savingTheme ? 'Saving…' : 'Save Theme'}
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="secondary" size="sm" onClick={() => void copyMemberNumber(r.member_number)}>
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                  <Button variant="danger" size="sm" onClick={() => void deleteFrequentFlyer(r.id)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-            {ffRows.length === 0 && <div className="text-sm text-gray-500">No frequent flyer accounts yet.</div>}
-          </div>
-        </section>
+              );
+            })()}
+          </section>
+        </div>
       )}
 
+      {/* ── Admin tab ── */}
       {tab === 'admin' && isAdmin && (
         <div className="space-y-8">
           {/* Generate Invite Code */}
@@ -714,7 +770,17 @@ export function Account() {
                         <Button size="sm" variant="secondary" onClick={() => void copyCode(code.code)}>
                           <Copy className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="danger" onClick={() => void deleteCode(code.id)}>
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          onClick={() =>
+                            setConfirmAction({
+                              title: 'Delete invite code?',
+                              message: `Delete code ${code.code}? This cannot be undone.`,
+                              onConfirm: () => void deleteCode(code.id),
+                            })
+                          }
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </>
@@ -777,6 +843,7 @@ export function Account() {
         </div>
       )}
 
+      {/* ── Support tab ── */}
       {tab === 'support' && (
         <div className="space-y-8">
           <section className="rounded-xl border bg-white p-6 shadow-sm">
@@ -796,39 +863,35 @@ export function Account() {
         </div>
       )}
 
-      {showDeactivateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <div className="mb-2 text-xl font-bold text-gray-900">Deactivate account?</div>
-            <p className="mb-4 text-sm text-gray-600">
-              This will soft-deactivate your account. You can reactivate whenever you want by logging back in.
-            </p>
+      {/* Deactivate modal — themed */}
+      <ConfirmModal
+        open={showDeactivateModal}
+        title="Deactivate account?"
+        message="This will soft-deactivate your account. You can reactivate whenever you want by logging back in."
+        confirmLabel={deactivating ? 'Deactivating…' : 'Deactivate'}
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={async () => {
+          await deactivate();
+          setShowDeactivateModal(false);
+        }}
+        onCancel={() => setShowDeactivateModal(false)}
+      />
 
-            {error && <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>}
-
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="primary"
-                onClick={() => setShowDeactivateModal(false)}
-                disabled={deactivating}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="secondary"
-                className="text-red-700"
-                onClick={async () => {
-                  await deactivate();
-                  setShowDeactivateModal(false);
-                }}
-                disabled={deactivating}
-              >
-                {deactivating ? 'Deactivating…' : 'Deactivate'}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Generic confirm modal — themed */}
+      <ConfirmModal
+        open={!!confirmAction}
+        title={confirmAction?.title ?? ''}
+        message={confirmAction?.message ?? ''}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          confirmAction?.onConfirm();
+          setConfirmAction(null);
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
     </div>
   );
 }

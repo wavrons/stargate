@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from './components/Button';
@@ -10,6 +10,9 @@ import { Itinerary } from './pages/Itinerary';
 import { UpdatePassword } from './pages/UpdatePassword';
 import { Waitlist } from './pages/Waitlist';
 import { Account } from './pages/Account';
+import { Board } from './pages/Board';
+import { Home } from './pages/Home';
+import { Onboarding } from './pages/Onboarding';
 import type { Session } from '@supabase/supabase-js';
 
 const CITY_THEME_LABELS: Record<string, string> = {
@@ -37,17 +40,49 @@ function applyCityTheme(themeKey: string) {
   }
 }
 
-function ThemeBootOverlay({ visible, label }: { visible: boolean; label: string }) {
+type OverlayMode = 'infinite' | 'progress';
+
+function ThemeBootOverlay({
+  visible,
+  label,
+  mode = 'infinite',
+  progress = 0,
+}: {
+  visible: boolean;
+  label: string;
+  mode?: OverlayMode;
+  progress?: number;
+}) {
+  const clamped = Math.min(100, Math.max(0, Math.round(progress)));
+  // clip-path inset: top value = 100% - progress (fills from bottom)
+  const fillInset = `${100 - clamped}%`;
+
   return (
     <div
-      className={`theme-boot-overlay ${visible ? 'theme-boot-overlay--visible' : 'theme-boot-overlay--hidden'}`}
+      className={`theme-boot-overlay ${visible ? 'theme-boot-overlay--visible' : 'theme-boot-overlay--hidden'} ${mode === 'infinite' ? 'theme-boot-overlay--infinite' : ''}`}
       aria-hidden={!visible}
     >
       <div className="theme-boot-overlay__content">
         {label ? (
           <>
             <div className="theme-boot-overlay__kicker">Welcome to</div>
-            <div className="theme-boot-overlay__title">{label}</div>
+            {mode === 'progress' ? (
+              <>
+                <div className="theme-boot-overlay__title theme-boot-overlay__title--progress">
+                  {label}
+                  <div
+                    className="theme-boot-overlay__title-fill"
+                    style={{ '--fill-inset': fillInset } as React.CSSProperties}
+                    aria-hidden
+                  >
+                    {label}
+                  </div>
+                </div>
+                <div className="theme-boot-overlay__percent">{clamped}%</div>
+              </>
+            ) : (
+              <div className="theme-boot-overlay__title">{label}</div>
+            )}
           </>
         ) : null}
       </div>
@@ -59,7 +94,7 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
   const { t, i18n } = useTranslation();
   const location = useLocation();
 
-  const isDashboard = location.pathname === '/' || location.pathname.startsWith('/trip/');
+  const isDashboard = location.pathname === '/dashboard' || location.pathname.startsWith('/trip/');
   const isItinerary = location.pathname.startsWith('/itinerary');
   const isAccountPage = location.pathname.startsWith('/account');
 
@@ -71,7 +106,7 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
             <div className="text-base font-semibold text-gray-900">{t('app.title')}</div>
             <nav className="flex items-center gap-2">
               <Link
-                to="/"
+                to="/dashboard"
                 className={`rounded-lg px-3 py-2 text-sm font-medium ${
                   isDashboard ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
                 }`}
@@ -114,23 +149,111 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
 
       <main>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/trip/:id" element={<TripDetail />} />
+          <Route path="/trip/:id/board" element={<Board />} />
           <Route path="/itinerary" element={<Itinerary />} />
           <Route path="/account" element={<Account />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
     </div>
   );
 }
 
+const BOOT_MIN_MS = 2000;
+const PROGRESS_INTERVAL_MS = 60; // tick every 60ms for smooth progress
+
 function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [bootThemeVisible, setBootThemeVisible] = useState(true);
-  const [bootThemeLabel, setBootThemeLabel] = useState('');
 
+  // Overlay state
+  const [bootVisible, setBootVisible] = useState(true);
+  const [bootLabel, setBootLabel] = useState('');
+  const [bootMode, setBootMode] = useState<OverlayMode>('infinite');
+  const [bootProgress, setBootProgress] = useState(0);
+
+  // Gate: don't render app content until the overlay is up and theme is applied
+  const [themeReady, setThemeReady] = useState(false);
+
+  // Onboarding: null = unknown, true = needs onboarding, false = already onboarded
+  const [needsOnboarding, setNeedsOnboarding] = useState<boolean | null>(null);
+
+  const overlayShownAt = useRef<number>(Date.now());
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const progressTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const clearTimers = useCallback(() => {
+    if (hideTimer.current) { clearTimeout(hideTimer.current); hideTimer.current = null; }
+    if (progressTimer.current) { clearInterval(progressTimer.current); progressTimer.current = null; }
+  }, []);
+
+  // Show overlay immediately (blocks content via themeReady=false)
+  const showOverlay = useCallback((label: string, mode: OverlayMode = 'infinite') => {
+    clearTimers();
+    overlayShownAt.current = Date.now();
+    setBootLabel(label);
+    setBootMode(mode);
+    setBootProgress(0);
+    setBootVisible(true);
+    setThemeReady(false);
+
+    if (mode === 'progress') {
+      // Simulate progress: ramp to ~90% over BOOT_MIN_MS, then wait for hideOverlay to finish
+      const totalTicks = Math.floor(BOOT_MIN_MS / PROGRESS_INTERVAL_MS);
+      let tick = 0;
+      progressTimer.current = setInterval(() => {
+        tick++;
+        // Ease-out curve: fast start, slows toward 90%
+        const ratio = tick / totalTicks;
+        const value = Math.min(90, Math.round(90 * (1 - Math.pow(1 - ratio, 2))));
+        setBootProgress(value);
+        if (tick >= totalTicks && progressTimer.current) {
+          clearInterval(progressTimer.current);
+          progressTimer.current = null;
+        }
+      }, PROGRESS_INTERVAL_MS);
+    }
+  }, [clearTimers]);
+
+  // Dismiss overlay: for progress mode, jump to 100% first, then fade out
+  const hideOverlay = useCallback(() => {
+    const elapsed = Date.now() - overlayShownAt.current;
+    const remaining = Math.max(0, BOOT_MIN_MS - elapsed);
+
+    // Stop the progress ramp
+    if (progressTimer.current) { clearInterval(progressTimer.current); progressTimer.current = null; }
+
+    const finalize = () => {
+      // For progress mode, snap to 100% and hold briefly before fading
+      if (bootMode === 'progress') {
+        setBootProgress(100);
+        hideTimer.current = setTimeout(() => {
+          setBootVisible(false);
+          setThemeReady(true);
+          hideTimer.current = null;
+        }, 400); // hold 100% for 400ms so user sees it
+      } else {
+        setBootVisible(false);
+        setThemeReady(true);
+        hideTimer.current = null;
+      }
+    };
+
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    if (remaining > 0) {
+      hideTimer.current = setTimeout(finalize, remaining);
+    } else {
+      finalize();
+    }
+  }, [bootMode]);
+
+  useEffect(() => {
+    return () => clearTimers();
+  }, [clearTimers]);
+
+  // ── Auth session ──
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -146,25 +269,22 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    // Theme is applied before React loads (index.html inline script). Do not override it here,
-    // otherwise users will see a brief flash of the fallback theme.
-  }, []);
-
+  // ── Theme transition events (from Account page theme changes) ──
   useEffect(() => {
     const onStart = (evt: Event) => {
       const detail = (evt as CustomEvent<ThemeTransitionStartDetail>).detail;
       if (!detail?.themeKey) return;
 
-      setBootThemeVisible(true);
-      setBootThemeLabel(detail.label ?? CITY_THEME_LABELS[detail.themeKey] ?? '');
-      applyCityTheme(detail.themeKey);
+      // Show overlay first, THEN apply theme behind it
+      showOverlay(detail.label ?? CITY_THEME_LABELS[detail.themeKey] ?? '', 'infinite');
+      // Small delay so overlay is opaque before theme paint
+      requestAnimationFrame(() => {
+        applyCityTheme(detail.themeKey);
+      });
     };
 
     const onEnd = () => {
-      window.setTimeout(() => {
-        setBootThemeVisible(false);
-      }, 300);
+      hideOverlay();
     };
 
     window.addEventListener('city-theme-transition-start', onStart as EventListener);
@@ -174,23 +294,42 @@ function App() {
       window.removeEventListener('city-theme-transition-start', onStart as EventListener);
       window.removeEventListener('city-theme-transition-end', onEnd as EventListener);
     };
-  }, []);
+  }, [showOverlay, hideOverlay]);
 
+  // ── Initial boot: show overlay → apply theme → dismiss ──
   useEffect(() => {
     if (loading) return;
+
     const run = async () => {
       if (!session?.user) {
+        // Not logged in: quick infinite overlay with fallback theme
         const fallback = 'taipei';
-        setBootThemeLabel(CITY_THEME_LABELS[fallback]);
+        showOverlay(CITY_THEME_LABELS[fallback], 'infinite');
         applyCityTheme(fallback);
-        window.dispatchEvent(
-          new CustomEvent<ThemeTransitionStartDetail>('city-theme-transition-start', {
-            detail: { themeKey: fallback, label: CITY_THEME_LABELS[fallback] },
-          })
-        );
-        window.dispatchEvent(new Event('city-theme-transition-end'));
+        hideOverlay();
         return;
       }
+
+      // Check if user has completed onboarding
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('onboarded')
+        .eq('user_id', session.user.id)
+        .maybeSingle();
+
+      if (!profile || !profile.onboarded) {
+        // First-time user: show onboarding (Taipei theme as default)
+        applyCityTheme('taipei');
+        setNeedsOnboarding(true);
+        setBootVisible(false);
+        setThemeReady(true);
+        return;
+      }
+
+      setNeedsOnboarding(false);
+
+      // Logged in: show progress overlay FIRST, then fetch theme behind it
+      showOverlay('', 'progress');
 
       const { data, error } = await supabase
         .from('user_settings')
@@ -199,16 +338,18 @@ function App() {
         .maybeSingle();
 
       const themeKey = !error && data?.city_theme ? data.city_theme : 'taipei';
-      window.dispatchEvent(
-        new CustomEvent<ThemeTransitionStartDetail>('city-theme-transition-start', {
-          detail: { themeKey, label: CITY_THEME_LABELS[themeKey] ?? CITY_THEME_LABELS.taipei },
-        })
-      );
-      window.dispatchEvent(new Event('city-theme-transition-end'));
+      const label = CITY_THEME_LABELS[themeKey] ?? CITY_THEME_LABELS.taipei;
+
+      // Apply theme behind the overlay, then update label
+      applyCityTheme(themeKey);
+      setBootLabel(label);
+
+      // Now let hideOverlay handle the min-duration + 100% snap
+      hideOverlay();
     };
 
     void run();
-  }, [loading, session]);
+  }, [loading, session, showOverlay, hideOverlay]);
 
   useEffect(() => {
     if (!session?.user) return;
@@ -220,26 +361,40 @@ function App() {
     await supabase.auth.signOut();
   };
 
+  // While loading auth state, show overlay only
   if (loading) {
-    return (
-      <>
-        <ThemeBootOverlay visible label={bootThemeLabel} />
-        <div className="p-6 text-sm text-gray-600">Loading...</div>
-      </>
-    );
+    return <ThemeBootOverlay visible label={bootLabel} mode="infinite" />;
   }
+
+  const handleOnboardingComplete = (themeKey: string, themeLabel: string) => {
+    setNeedsOnboarding(false);
+    applyCityTheme(themeKey);
+    showOverlay(themeLabel, 'progress');
+    // Small delay to let overlay paint, then dismiss
+    setTimeout(() => hideOverlay(), 300);
+  };
 
   return (
     <>
-      <ThemeBootOverlay visible={bootThemeVisible} label={bootThemeLabel} />
-      <Routes>
-        <Route path="/auth/update-password" element={<UpdatePassword />} />
-        <Route path="/waitlist" element={<Waitlist />} />
-        <Route
-          path="*"
-          element={!session ? <Auth onAuth={() => {}} /> : <AuthedApp onLogout={handleLogout} />}
-        />
-      </Routes>
+      <ThemeBootOverlay visible={bootVisible} label={bootLabel} mode={bootMode} progress={bootProgress} />
+      {/* Onboarding for first-time users */}
+      {needsOnboarding && session?.user && (
+        <Onboarding userId={session.user.id} onComplete={handleOnboardingComplete} />
+      )}
+      {/* Public routes: Home (quote) and Auth are accessible without login */}
+      {!session && (
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<Auth onAuth={() => {}} />} />
+          <Route path="/auth/update-password" element={<UpdatePassword />} />
+          <Route path="/waitlist" element={<Waitlist />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      )}
+      {/* Authenticated routes */}
+      {session && (themeReady || needsOnboarding === false) && !needsOnboarding && (
+        <AuthedApp onLogout={handleLogout} />
+      )}
     </>
   );
 }

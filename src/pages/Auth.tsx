@@ -96,12 +96,12 @@ export function Auth({ onAuth }: AuthProps) {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
-        <h1 className="mb-2 text-center text-3xl font-bold text-gray-900">
+    <div className="flex min-h-screen items-center justify-center px-4" style={{ background: 'var(--bg-surface)' }}>
+      <div className="w-full max-w-md rounded-2xl p-8 shadow-xl" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-card)' }}>
+        <h1 className="mb-2 text-center text-3xl font-bold" style={{ color: 'var(--text-main)' }}>
           {t('app.title')}
         </h1>
-        <p className="mb-6 text-center text-gray-600">
+        <p className="mb-6 text-center" style={{ color: 'var(--text-muted)' }}>
           {mode === 'login' && t('auth.login')}
           {mode === 'signup' && t('auth.createAccount')}
           {mode === 'forgot' && t('auth.forgotPassword')}

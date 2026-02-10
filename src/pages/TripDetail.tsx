@@ -141,7 +141,7 @@ export function TripDetail() {
           Back to Dashboard
         </Button>
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">{trip.title}</h1>
+          <h1 className="text-3xl font-bold" style={{ color: 'var(--text-main)' }}>{trip.title}</h1>
           <Button onClick={() => setIsFormOpen(!isFormOpen)}>
             <Plus className="mr-2 h-4 w-4" />
             {t('tripPlanner.addPOI')}
@@ -150,7 +150,7 @@ export function TripDetail() {
       </div>
 
       {isFormOpen && (
-        <form onSubmit={onAdd} className="mb-8 rounded-xl border bg-white p-5 shadow-sm">
+        <form onSubmit={onAdd} className="mb-8 rounded-xl p-5 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm font-medium">{t('tripPlanner.country')}</label>
@@ -188,10 +188,10 @@ export function TripDetail() {
       <div className="space-y-6">
         {grouped.map(([country, items]) => (
           <section key={country}>
-            <h2 className="mb-3 text-sm font-semibold text-gray-700">{country}</h2>
+            <h2 className="mb-3 text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>{country}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {items.map(item => (
-                <article key={item.id} className="rounded-xl border bg-white p-4 shadow-sm">
+                <article key={item.id} className="rounded-xl p-4 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
                   {item.image_url && (
                     <img src={item.image_url} alt={item.name} className="mb-3 h-40 w-full rounded-lg object-cover" />
                   )}
@@ -202,16 +202,16 @@ export function TripDetail() {
                     </Button>
                   </div>
                   {item.link && (
-                    <a href={item.link} target="_blank" className="text-sm text-blue-600 hover:underline">Link</a>
+                    <a href={item.link} target="_blank" className="text-sm hover:underline" style={{ color: 'var(--accent)' }}>Link</a>
                   )}
-                  {item.notes && <p className="mt-1 text-sm text-gray-600">{item.notes}</p>}
+                  {item.notes && <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>{item.notes}</p>}
                 </article>
               ))}
             </div>
           </section>
         ))}
         {items.length === 0 && (
-          <div className="rounded-xl border border-dashed p-12 text-center text-gray-500">
+          <div className="rounded-xl border border-dashed p-12 text-center" style={{ color: 'var(--text-muted)', borderColor: 'var(--border-color)' }}>
             No places added yet.
           </div>
         )}

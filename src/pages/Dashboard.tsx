@@ -85,7 +85,7 @@ export function Dashboard() {
   return (
     <div className="mx-auto max-w-6xl p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+        <h1 className="text-2xl font-bold" style={{ color: 'var(--text-main)' }}>{t('dashboard.title')}</h1>
         <Button onClick={() => setIsCreating(!isCreating)}>
           <Plus className="mr-2 h-4 w-4" />
           {t('dashboard.newTrip')}
@@ -93,7 +93,7 @@ export function Dashboard() {
       </div>
 
       {isCreating && (
-        <form onSubmit={handleCreateTrip} className="mb-8 rounded-xl border bg-white p-5 shadow-sm">
+        <form onSubmit={handleCreateTrip} className="mb-8 rounded-xl p-5 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="mb-1 block text-sm font-medium">{t('dashboard.tripTitle')}</label>
@@ -117,11 +117,12 @@ export function Dashboard() {
         {trips.map(trip => (
           <div 
             key={trip.id} 
-            className="group relative cursor-pointer rounded-xl border bg-white p-6 shadow-sm transition-all hover:shadow-md"
+            className="group relative cursor-pointer rounded-xl p-6 shadow-sm transition-all hover:shadow-md"
+            style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}
             onClick={() => navigate(`/trip/${trip.id}/board`)}
           >
-            <h3 className="mb-2 text-lg font-semibold text-gray-900">{trip.title}</h3>
-            <p className="text-sm text-gray-500">{t('dashboard.created')} {new Date(trip.created_at).toLocaleDateString()}</p>
+            <h3 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text-main)' }}>{trip.title}</h3>
+            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('dashboard.created')} {new Date(trip.created_at).toLocaleDateString()}</p>
             
             <div className="absolute right-4 top-4 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
               <Button 
@@ -149,7 +150,7 @@ export function Dashboard() {
         ))}
 
         {trips.length === 0 && !isCreating && (
-          <div className="col-span-full rounded-xl border border-dashed p-12 text-center text-gray-500">
+          <div className="col-span-full rounded-xl border border-dashed p-12 text-center" style={{ color: 'var(--text-muted)', borderColor: 'var(--border-color)' }}>
             {t('dashboard.noTrips')}
           </div>
         )}

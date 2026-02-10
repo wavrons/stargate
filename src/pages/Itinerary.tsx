@@ -29,26 +29,26 @@ export function Itinerary() {
 
   return (
     <div className="mx-auto max-w-4xl p-6">
-      <h1 className="mb-4 text-2xl font-bold text-gray-900">{t('itinerary.title')}</h1>
+      <h1 className="mb-4 text-2xl font-bold" style={{ color: 'var(--text-main)' }}>{t('itinerary.title')}</h1>
 
       {items.length === 0 ? (
-        <div className="rounded-xl border border-dashed bg-white p-8 text-center text-sm text-gray-600">
+        <div className="rounded-xl border border-dashed p-8 text-center text-sm" style={{ background: 'var(--card-surface)', color: 'var(--text-muted)', borderColor: 'var(--border-color)' }}>
           {t('itinerary.noPOIs')}
         </div>
       ) : (
         <div className="space-y-3">
           {items.map(item => (
-            <div key={item.id} className="rounded-xl border bg-white p-4 shadow-sm">
+            <div key={item.id} className="rounded-xl p-4 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
               <div className="flex justify-between gap-3">
                 <div>
-                  <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-blue-600">
+                  <div className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--accent)' }}>
                     {(item as any).trips?.title} • {item.country}
                   </div>
-                  <div className="text-base font-semibold text-gray-900">{item.name}</div>
-                  {item.notes && <div className="mt-1 text-sm text-gray-700">{item.notes}</div>}
+                  <div className="text-base font-semibold" style={{ color: 'var(--text-main)' }}>{item.name}</div>
+                  {item.notes && <div className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>{item.notes}</div>}
                 </div>
                 {item.link && (
-                  <a href={item.link} target="_blank" className="text-sm text-blue-600 hover:underline">Link</a>
+                  <a href={item.link} target="_blank" className="text-sm hover:underline" style={{ color: 'var(--accent)' }}>Link</a>
                 )}
               </div>
             </div>

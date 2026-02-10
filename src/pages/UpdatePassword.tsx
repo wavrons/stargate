@@ -43,9 +43,9 @@ export function UpdatePassword() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
-        <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">
+    <div className="flex min-h-screen items-center justify-center px-4" style={{ background: 'var(--bg-main)' }}>
+      <div className="w-full max-w-md rounded-2xl p-8 shadow-xl" style={{ background: 'var(--card-surface)' }}>
+        <h1 className="mb-6 text-center text-2xl font-bold" style={{ color: 'var(--text-main)' }}>
           {t('auth.updatePasswordTitle')}
         </h1>
 
@@ -57,7 +57,7 @@ export function UpdatePassword() {
 
         <form onSubmit={handleUpdate} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">{t('auth.newPassword')}</label>
+            <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>{t('auth.newPassword')}</label>
             <Input
               type="password"
               required

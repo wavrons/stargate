@@ -480,7 +480,7 @@ export function Account() {
 
   return (
     <div className="mx-auto max-w-3xl p-6">
-      <h1 className="mb-4 text-2xl font-bold text-gray-900">Account</h1>
+      <h1 className="mb-4 text-2xl font-bold" style={{ color: 'var(--text-main)' }}>Account</h1>
 
       <div className="mb-6 flex flex-wrap gap-2">
         <Button variant={tab === 'profile' ? 'primary' : 'secondary'} onClick={() => setTab('profile')}>
@@ -499,29 +499,29 @@ export function Account() {
         </Button>
       </div>
 
-      {error && <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>}
+      {error && <div className="mb-4 rounded-lg p-3 text-sm" style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444' }}>{error}</div>}
       {message && <div className="mb-4 rounded-lg bg-green-50 p-3 text-sm text-green-700">{message}</div>}
 
       {/* ── Profile tab (Basic + Frequent Flyer) ── */}
       {tab === 'profile' && (
         <div className="space-y-8">
-          <section className="rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">Basic</h2>
+          <section className="rounded-xl p-6 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+            <h2 className="mb-4 text-lg font-semibold" style={{ color: 'var(--text-main)' }}>Basic</h2>
 
             <div className="flex items-center gap-4">
-              <div className="h-16 w-16 overflow-hidden rounded-full border bg-gray-100">
+              <div className="h-16 w-16 overflow-hidden rounded-full" style={{ border: '1px solid var(--border-color)', background: 'var(--bg-main)' }}>
                 <img src={avatarUrl} alt="avatar" className="h-full w-full object-cover" />
               </div>
             </div>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Display name</label>
+                <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Display name</label>
                 <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Your name" />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+                <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Email</label>
                 <Input value={currentEmail} disabled />
                 <div className="mt-2 flex gap-2">
                   <Input
@@ -533,7 +533,7 @@ export function Account() {
                     Update
                   </Button>
                 </div>
-                <p className="mt-1 text-xs text-gray-500">Changing email requires re-verification.</p>
+                <p className="mt-1 text-xs" style={{ color: 'var(--text-muted)' }}>Changing email requires re-verification.</p>
               </div>
             </div>
 
@@ -543,12 +543,12 @@ export function Account() {
           </section>
 
           {/* Frequent Flyer — now under Profile */}
-          <section className="rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">Frequent Flyer Info</h2>
+          <section className="rounded-xl p-6 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+            <h2 className="mb-4 text-lg font-semibold" style={{ color: 'var(--text-main)' }}>Frequent Flyer Info</h2>
 
             <div className="grid gap-3 md:grid-cols-3">
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Airline</label>
+                <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Airline</label>
                 <Select
                   value={airlineCode}
                   onChange={(next) => {
@@ -559,22 +559,22 @@ export function Account() {
                   placeholder="Select airline…"
                   options={AIRLINES.map((a) => ({ value: a.code, label: `${a.code} — ${a.name}` }))}
                 />
-                <p className="mt-1 text-xs text-gray-500">Or type airline code below.</p>
+                <p className="mt-1 text-xs" style={{ color: 'var(--text-muted)' }}>Or type airline code below.</p>
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Airline code</label>
+                <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Airline code</label>
                 <Input value={airlineCode} onChange={(e) => setAirlineCode(e.target.value)} placeholder="e.g. BR" />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Member number</label>
+                <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Member number</label>
                 <Input value={memberNumber} onChange={(e) => setMemberNumber(e.target.value)} placeholder="123456789" />
               </div>
             </div>
 
             <div className="mt-3">
-              <label className="mb-1 block text-sm font-medium text-gray-700">Airline name (optional)</label>
+              <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Airline name (optional)</label>
               <Input value={airlineName} onChange={(e) => setAirlineName(e.target.value)} placeholder="Airline name" />
             </div>
 
@@ -586,10 +586,10 @@ export function Account() {
               {ffRows.map((r) => (
                 <div key={r.id} className="flex items-center justify-between rounded-lg border p-3">
                   <div className="min-w-0">
-                    <div className="text-sm font-semibold text-gray-900">
+                    <div className="text-sm font-semibold" style={{ color: 'var(--text-main)' }}>
                       {r.airline_code}{r.airline_name ? ` — ${r.airline_name}` : ''}
                     </div>
-                    <div className="font-mono text-sm text-gray-700">{r.member_number}</div>
+                    <div className="font-mono text-sm" style={{ color: 'var(--text-muted)' }}>{r.member_number}</div>
                   </div>
                   <div className="flex gap-2">
                     <Button variant="secondary" size="sm" onClick={() => void copyMemberNumber(r.member_number)}>
@@ -611,7 +611,7 @@ export function Account() {
                   </div>
                 </div>
               ))}
-              {ffRows.length === 0 && <div className="text-sm text-gray-500">No frequent flyer accounts yet.</div>}
+              {ffRows.length === 0 && <div className="text-sm" style={{ color: 'var(--text-muted)' }}>No frequent flyer accounts yet.</div>}
             </div>
           </section>
         </div>
@@ -620,9 +620,9 @@ export function Account() {
       {/* ── Look and Feel tab (City Theme carousel) ── */}
       {tab === 'look_and_feel' && (
         <div className="space-y-8">
-          <section className="rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">City Theme</h2>
-            <p className="mb-4 text-sm text-gray-600">
+          <section className="rounded-xl p-6 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+            <h2 className="mb-4 text-lg font-semibold" style={{ color: 'var(--text-main)' }}>City Theme</h2>
+            <p className="mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>
               Choose a city theme to customize your experience. Each theme changes the look and feel of the entire site and your avatar.
             </p>
 
@@ -715,12 +715,12 @@ export function Account() {
       {tab === 'admin' && isAdmin && (
         <div className="space-y-8">
           {/* Generate Invite Code */}
-          <section className="rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold text-gray-900">Generate Invite Code</h2>
+          <section className="rounded-xl p-6 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+            <h2 className="mb-4 text-xl font-semibold" style={{ color: 'var(--text-main)' }}>Generate Invite Code</h2>
             <form onSubmit={generateCode} className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">Name (Optional)</label>
+                  <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Name (Optional)</label>
                   <Input
                     value={newCodeName}
                     onChange={(e) => setNewCodeName(e.target.value)}
@@ -728,7 +728,7 @@ export function Account() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">Email (Optional)</label>
+                  <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Email (Optional)</label>
                   <Input
                     type="email"
                     value={newCodeEmail}
@@ -744,22 +744,22 @@ export function Account() {
           </section>
 
           {/* Invite Codes List */}
-          <section className="rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold text-gray-900">Invite Codes ({codes.length})</h2>
+          <section className="rounded-xl p-6 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+            <h2 className="mb-4 text-xl font-semibold" style={{ color: 'var(--text-main)' }}>Invite Codes ({codes.length})</h2>
             <div className="space-y-2">
               {codes.map((code) => (
                 <div key={code.id} className="flex items-center justify-between rounded-lg border p-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
-                      <span className="font-mono text-lg font-bold text-blue-600">{code.code}</span>
-                      {code.used_by && <span className="rounded bg-gray-200 px-2 py-1 text-xs">Used</span>}
+                      <span className="font-mono text-lg font-bold" style={{ color: 'var(--accent)' }}>{code.code}</span>
+                      {code.used_by && <span className="rounded px-2 py-1 text-xs" style={{ background: 'var(--hover-bg)', color: 'var(--text-muted)' }}>Used</span>}
                     </div>
                     {code.created_for_name && (
-                      <div className="mt-1 text-sm text-gray-600">
+                      <div className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>
                         For: {code.created_for_name} {code.created_for_email && `(${code.created_for_email})`}
                       </div>
                     )}
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
                       Created {new Date(code.created_at).toLocaleDateString()}
                       {code.used_at && ` • Used ${new Date(code.used_at).toLocaleDateString()}`}
                     </div>
@@ -789,14 +789,14 @@ export function Account() {
                 </div>
               ))}
               {codes.length === 0 && (
-                <p className="text-center text-sm text-gray-500">No invite codes yet.</p>
+                <p className="text-center text-sm" style={{ color: 'var(--text-muted)' }}>No invite codes yet.</p>
               )}
             </div>
           </section>
 
           {/* Waitlist */}
-          <section className="rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold text-gray-900">
+          <section className="rounded-xl p-6 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+            <h2 className="mb-4 text-xl font-semibold" style={{ color: 'var(--text-main)' }}>
               Waitlist ({waitlist.filter(w => w.status === 'pending').length} pending)
             </h2>
             <div className="space-y-2">
@@ -805,7 +805,7 @@ export function Account() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-900">{entry.name}</span>
+                        <span className="font-semibold" style={{ color: 'var(--text-main)' }}>{entry.name}</span>
                         <span className={`rounded px-2 py-1 text-xs ${
                           entry.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           entry.status === 'approved' ? 'bg-green-100 text-green-800' :
@@ -814,11 +814,11 @@ export function Account() {
                           {entry.status}
                         </span>
                       </div>
-                      <div className="text-sm text-gray-600">{entry.email}</div>
+                      <div className="text-sm" style={{ color: 'var(--text-muted)' }}>{entry.email}</div>
                       {entry.message && (
-                        <div className="mt-2 text-sm italic text-gray-700">"{entry.message}"</div>
+                        <div className="mt-2 text-sm italic" style={{ color: 'var(--text-main)' }}>"{entry.message}"</div>
                       )}
-                      <div className="mt-1 text-xs text-gray-500">
+                      <div className="mt-1 text-xs" style={{ color: 'var(--text-muted)' }}>
                         Submitted {new Date(entry.created_at).toLocaleDateString()}
                       </div>
                     </div>
@@ -836,7 +836,7 @@ export function Account() {
                 </div>
               ))}
               {waitlist.length === 0 && (
-                <p className="text-center text-sm text-gray-500">No waitlist entries yet.</p>
+                <p className="text-center text-sm" style={{ color: 'var(--text-muted)' }}>No waitlist entries yet.</p>
               )}
             </div>
           </section>
@@ -846,14 +846,14 @@ export function Account() {
       {/* ── Support tab ── */}
       {tab === 'support' && (
         <div className="space-y-8">
-          <section className="rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="mb-2 text-lg font-semibold text-gray-900">FAQ</h2>
-            <p className="text-sm text-gray-600">Coming soon.</p>
+          <section className="rounded-xl p-6 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+            <h2 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text-main)' }}>FAQ</h2>
+            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Coming soon.</p>
           </section>
 
-          <section className="rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="mb-2 text-lg font-semibold text-gray-900">Deactivate account</h2>
-            <p className="mb-4 text-sm text-gray-600">
+          <section className="rounded-xl p-6 shadow-sm" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+            <h2 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text-main)' }}>Deactivate account</h2>
+            <p className="mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>
               This is a soft deactivation. You can reactivate anytime by logging back in.
             </p>
             <Button variant="secondary" onClick={() => setShowDeactivateModal(true)}>

@@ -116,7 +116,7 @@ export function Auth({ onAuth }: AuthProps) {
         <form onSubmit={handleAuth} className="space-y-4">
           {mode === 'signup' && (
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">{t('auth.inviteCode')}</label>
+              <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>{t('auth.inviteCode')}</label>
               <Input
                 type="text"
                 required
@@ -126,14 +126,14 @@ export function Auth({ onAuth }: AuthProps) {
                 placeholder="ABC123"
                 className="uppercase"
               />
-              <p className="mt-1 text-xs text-gray-500">
-                {t('auth.inviteCodeHint')} <Link to="/waitlist" className="text-blue-600 hover:underline">{t('auth.joinWaitlist')}</Link>
+              <p className="mt-1 text-xs" style={{ color: 'var(--text-muted)' }}>
+                {t('auth.inviteCodeHint')} <Link to="/waitlist" className="hover:underline" style={{ color: 'var(--accent)' }}>{t('auth.joinWaitlist')}</Link>
               </p>
             </div>
           )}
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">{t('auth.email')}</label>
+            <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>{t('auth.email')}</label>
             <Input
               type="email"
               required
@@ -146,7 +146,7 @@ export function Auth({ onAuth }: AuthProps) {
           {mode !== 'forgot' && (
             <div>
               <div className="mb-1 flex justify-between">
-                <label className="block text-sm font-medium text-gray-700">{t('auth.password')}</label>
+                <label className="block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>{t('auth.password')}</label>
                 {mode === 'login' && (
                   <button
                     type="button"
@@ -155,7 +155,8 @@ export function Auth({ onAuth }: AuthProps) {
                       setError('');
                       setMessage('');
                     }}
-                    className="text-xs text-blue-600 hover:underline"
+                    className="text-xs hover:underline"
+                    style={{ color: 'var(--accent)' }}
                   >
                     {t('auth.forgotPasswordLink')}
                   </button>
@@ -191,7 +192,8 @@ export function Auth({ onAuth }: AuthProps) {
                 setError('');
                 setMessage('');
               }}
-              className="text-blue-600 hover:underline"
+              className="hover:underline"
+              style={{ color: 'var(--accent)' }}
             >
               {t('auth.noAccount')}
             </button>
@@ -202,7 +204,8 @@ export function Auth({ onAuth }: AuthProps) {
                 setError('');
                 setMessage('');
               }}
-              className="text-blue-600 hover:underline"
+              className="hover:underline"
+              style={{ color: 'var(--accent)' }}
             >
               {t('auth.backToLogin')}
             </button>

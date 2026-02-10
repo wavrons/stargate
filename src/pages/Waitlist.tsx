@@ -46,13 +46,13 @@ export function Waitlist() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl text-center">
+      <div className="flex min-h-screen items-center justify-center px-4" style={{ background: 'var(--bg-main)' }}>
+        <div className="w-full max-w-md rounded-2xl p-8 shadow-xl text-center" style={{ background: 'var(--card-surface)' }}>
           <div className="mb-4 text-6xl">✅</div>
-          <h1 className="mb-2 text-2xl font-bold text-gray-900">
+          <h1 className="mb-2 text-2xl font-bold" style={{ color: 'var(--text-main)' }}>
             {t('waitlist.successTitle')}
           </h1>
-          <p className="mb-6 text-gray-600">
+          <p className="mb-6" style={{ color: 'var(--text-muted)' }}>
             {t('waitlist.successMessage')}
           </p>
           <Button onClick={() => navigate('/')} variant="secondary">
@@ -64,18 +64,18 @@ export function Waitlist() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
-        <h1 className="mb-2 text-center text-3xl font-bold text-gray-900">
+    <div className="flex min-h-screen items-center justify-center px-4" style={{ background: 'var(--bg-main)' }}>
+      <div className="w-full max-w-md rounded-2xl p-8 shadow-xl" style={{ background: 'var(--card-surface)' }}>
+        <h1 className="mb-2 text-center text-3xl font-bold" style={{ color: 'var(--text-main)' }}>
           {t('waitlist.title')}
         </h1>
-        <p className="mb-6 text-center text-sm text-gray-600">
+        <p className="mb-6 text-center text-sm" style={{ color: 'var(--text-muted)' }}>
           {t('waitlist.description')}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">{t('waitlist.name')}</label>
+            <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>{t('waitlist.name')}</label>
             <Input
               type="text"
               required
@@ -86,7 +86,7 @@ export function Waitlist() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">{t('waitlist.email')}</label>
+            <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>{t('waitlist.email')}</label>
             <Input
               type="email"
               required
@@ -97,11 +97,12 @@ export function Waitlist() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              {t('waitlist.message')} <span className="text-gray-400">({t('waitlist.optional')})</span>
+            <label className="mb-1 block text-sm font-medium" style={{ color: 'var(--text-muted)' }}>
+              {t('waitlist.message')} <span style={{ color: 'var(--text-muted)', opacity: 0.6 }}>({t('waitlist.optional')})</span>
             </label>
             <textarea
-              className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-lg border p-2 text-sm focus:outline-none focus:ring-1"
+              style={{ borderColor: 'var(--border-color)', background: 'var(--input-surface, var(--card-surface))', color: 'var(--text-main)' }}
               rows={3}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -119,7 +120,8 @@ export function Waitlist() {
         <div className="mt-6 text-center text-sm">
           <button
             onClick={() => navigate('/')}
-            className="text-blue-600 hover:underline"
+            className="hover:underline"
+            style={{ color: 'var(--accent)' }}
           >
             {t('waitlist.backToLogin')}
           </button>

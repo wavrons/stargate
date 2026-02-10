@@ -99,33 +99,30 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
   const isAccountPage = location.pathname.startsWith('/account');
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-gray-200 bg-white">
+    <div className="min-h-screen" style={{ background: 'var(--bg-main)' }}>
+      <header style={{ borderBottom: '1px solid var(--border-color)', background: 'var(--card-surface)' }}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 p-4">
           <div className="flex items-center gap-4">
-            <div className="text-base font-semibold text-gray-900">{t('app.title')}</div>
+            <div className="text-base font-semibold" style={{ color: 'var(--text-main)' }}>{t('app.title')}</div>
             <nav className="flex items-center gap-2">
               <Link
                 to="/dashboard"
-                className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                  isDashboard ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                className="rounded-lg px-3 py-2 text-sm font-medium"
+                style={isDashboard ? { background: 'var(--accent-muted, rgba(0,0,0,0.06))', color: 'var(--accent)' } : { color: 'var(--text-muted)' }}
               >
                 {t('nav.tripPlanner')}
               </Link>
               <Link
                 to="/itinerary"
-                className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                  isItinerary ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                className="rounded-lg px-3 py-2 text-sm font-medium"
+                style={isItinerary ? { background: 'var(--accent-muted, rgba(0,0,0,0.06))', color: 'var(--accent)' } : { color: 'var(--text-muted)' }}
               >
                 {t('nav.itinerary')}
               </Link>
               <Link
                 to="/account"
-                className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                  isAccountPage ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                className="rounded-lg px-3 py-2 text-sm font-medium"
+                style={isAccountPage ? { background: 'var(--accent-muted, rgba(0,0,0,0.06))', color: 'var(--accent)' } : { color: 'var(--text-muted)' }}
               >
                 Account
               </Link>

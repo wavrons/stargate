@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apply theme variables globally */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  font-family: var(--font-main) !important;
+  transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out, font-family 0.4s ease-in-out;
+}
+
+* {
+  transition-property: background-color, color, border-color;
+  transition-duration: 0.25s;
+  transition-timing-function: ease-in-out;
+}
+
+/* Override Tailwind background colors */
+.bg-white,
+.bg-gray-50,
+.bg-gray-100 {
+  background-color: var(--bg-surface) !important;
+}
+
+/* Card / surface background used by panels */
+section,
+.shadow-sm,
+.rounded-xl.border,
+.rounded-lg.border {
+  background-color: var(--card-surface) !important;
+  border-radius: var(--radius-card) !important;
+}
+
+/* Override Tailwind text colors */
+.text-gray-900,
+.text-gray-800,
+.text-gray-700 {
+  color: var(--text-main) !important;
+}
+
+.text-gray-600,
+.text-gray-500 {
+  color: var(--text-muted) !important;
+}
+
+.text-gray-400 {
+  color: var(--text-muted) !important;
+}
+
+/* Override Tailwind border colors */
+.border-gray-200,
+.border-gray-300 {
+  border-color: var(--border-color) !important;
+}
+
+.border {
+  border-color: var(--border-color) !important;
+}
+
+/* Apply border radius from theme */
+.rounded-lg,
+.rounded-xl {
+  border-radius: var(--radius-control) !important;
+}
+
+.rounded {
+  border-radius: calc(var(--radius) * 0.5) !important;
+}
+
+/* Hover states using theme colors */
+.hover\:bg-gray-100:hover,
+.hover\:bg-gray-50:hover {
+  background-color: var(--hover-bg) !important;
+}
+
+/* Active/selected states */
+.bg-blue-50 {
+  background-color: var(--hover-bg) !important;
+}
+
+.text-blue-700,
+.text-blue-600 {
+  color: var(--accent) !important;
+}
+
+.ring-blue-500 {
+  --tw-ring-color: var(--accent) !important;
+}
+
+/* Input fields */
+input,
+textarea,
+select {
+  background-color: var(--input-surface) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
+  border-radius: var(--radius-control) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent) !important;
+}
+
+/* Headers */
+header {
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Links in navigation */
+nav a {
+  color: var(--text-main) !important;
+  border-radius: var(--radius-control) !important;
+}
+
+nav a:hover {
+  background-color: var(--hover-bg) !important;
+}
+
+/* Default button hover background utilities if used */
+.hover\:bg-gray-300:hover,
+.hover\:bg-gray-200:hover {
+  background-color: var(--hover-bg) !important;
+}
+
+/* Secondary button hover/active states (theme-aware) */
+.btn-secondary-theme:hover {
+  background-color: var(--hover-bg) !important;
+}
+
+.btn-secondary-theme:active {
+  background-color: var(--hover-bg) !important;
+  filter: brightness(0.95);
+}
+
+/* Boot theme overlay */
+.theme-boot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-cta);
+  color: var(--on-primary);
+  font-family: var(--font-main);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease, transform 300ms ease;
+  transform: scale(1.02);
+}
+
+.theme-boot-overlay--visible {
+  opacity: 1;
+  pointer-events: all;
+  transform: scale(1);
+}
+
+.theme-boot-overlay--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.99);
+}
+
+.theme-boot-overlay__content {
+  text-align: center;
+  padding: 24px;
+}
+
+.theme-boot-overlay__kicker {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.theme-boot-overlay__title {
+  margin-top: 10px;
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--overlay-title-color);
+}

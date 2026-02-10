@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "星際之門",
+    "login": "開啟傳送門",
+    "logout": "登出"
+  },
+  "auth": {
+    "login": "啟動",
+    "required": "必填",
+    "email": "電子郵件",
+    "password": "密碼",
+    "or": "或使用其他方式登入",
+    "apple": "使用 Apple 登入",
+    "createAccount": "建立帳號",
+    "forgotPassword": "重設密碼",
+    "forgotPasswordLink": "忘記密碼？",
+    "sendResetLink": "發送重設連結",
+    "backToLogin": "返回登入",
+    "signUp": "註冊",
+    "noAccount": "還沒有帳號？立即註冊",
+    "updatePasswordTitle": "更新密碼",
+    "newPassword": "新密碼",
+    "updatePassword": "更新密碼",
+    "updating": "更新中...",
+    "inviteCode": "邀請碼",
+    "inviteCodeHint": "沒有邀請碼？",
+    "joinWaitlist": "加入候補名單"
+  },
+  "waitlist": {
+    "title": "加入候補名單",
+    "description": "申請使用 Stargate。我們會審核您的申請並發送邀請碼。",
+    "name": "姓名",
+    "email": "電子郵件",
+    "message": "為什麼想加入？",
+    "optional": "選填",
+    "messagePlaceholder": "簡單介紹一下自己...",
+    "submit": "提交申請",
+    "backToLogin": "返回登入",
+    "successTitle": "申請已提交！",
+    "successMessage": "我們會審核您的申請並盡快回覆。"
+  },
+  "dashboard": {
+    "title": "我的行程",
+    "newTrip": "新增行程",
+    "create": "建立",
+    "cancel": "取消",
+    "tripTitle": "行程標題",
+    "placeholder": "例如：日本夏日之旅",
+    "noTrips": "尚無行程，立即建立一個！",
+    "created": "建立於"
+  },
+  "share": {
+    "title": "分享行程",
+    "invite": "邀請",
+    "accessList": "存取名單",
+    "noAccess": "目前沒有其他人有權限。",
+    "emailPlaceholder": "friend@example.com",
+    "viewer": "檢視者",
+    "editor": "編輯者",
+    "remove": "移除"
+  },
+  "nav": {
+    "tripPlanner": "行程規劃",
+    "itinerary": "我的行程"
+  },
+  "tripPlanner": {
+    "title": "行程規劃",
+    "addCountry": "新增國家",
+    "addPOI": "新增景點",
+    "country": "國家",
+    "name": "名稱",
+    "link": "連結",
+    "notes": "備註",
+    "image": "圖片網址",
+    "save": "儲存",
+    "cancel": "取消",
+    "delete": "刪除"
+  },
+  "itinerary": {
+    "title": "我的行程",
+    "noPOIs": "尚未新增景點"
+  }
+}

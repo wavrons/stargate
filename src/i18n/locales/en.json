@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "Stargate",
+    "login": "Gate Access",
+    "logout": "Sign out"
+  },
+  "auth": {
+    "login": "Engage",
+    "required": "Required",
+    "email": "Email",
+    "password": "Password",
+    "or": "Or continue with",
+    "apple": "Sign in with Apple",
+    "createAccount": "Create Account",
+    "forgotPassword": "Reset Password",
+    "forgotPasswordLink": "Forgot?",
+    "sendResetLink": "Send Reset Link",
+    "backToLogin": "Back to Login",
+    "signUp": "Sign Up",
+    "noAccount": "Don't have an account? Sign up",
+    "updatePasswordTitle": "Update Password",
+    "newPassword": "New Password",
+    "updatePassword": "Update Password",
+    "updating": "Updating...",
+    "inviteCode": "Invite Code",
+    "inviteCodeHint": "Don't have a code?",
+    "joinWaitlist": "Join the waitlist"
+  },
+  "waitlist": {
+    "title": "Join Waitlist",
+    "description": "Request access to Stargate. We'll review your request and send you an invite code.",
+    "name": "Full Name",
+    "email": "Email",
+    "message": "Why do you want to join?",
+    "optional": "optional",
+    "messagePlaceholder": "Tell us a bit about yourself...",
+    "submit": "Submit Request",
+    "backToLogin": "Back to Login",
+    "successTitle": "Request Submitted!",
+    "successMessage": "We'll review your request and get back to you soon."
+  },
+  "dashboard": {
+    "title": "My Trips",
+    "newTrip": "New Trip",
+    "create": "Create",
+    "cancel": "Cancel",
+    "tripTitle": "Trip Title",
+    "placeholder": "e.g. Summer in Japan",
+    "noTrips": "No trips yet. Create one to get started!",
+    "created": "Created"
+  },
+  "share": {
+    "title": "Share Trip",
+    "invite": "Invite",
+    "accessList": "Access List",
+    "noAccess": "No one else has access.",
+    "emailPlaceholder": "friend@example.com",
+    "viewer": "Viewer",
+    "editor": "Editor",
+    "remove": "Remove"
+  },
+  "nav": {
+    "tripPlanner": "Trip Planner",
+    "itinerary": "Itinerary"
+  },
+  "tripPlanner": {
+    "title": "Trip Planner",
+    "addCountry": "Add Country",
+    "addPOI": "Add POI",
+    "country": "Country",
+    "name": "Name",
+    "link": "Link",
+    "notes": "Notes",
+    "image": "Image URL",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "itinerary": {
+    "title": "My Itinerary",
+    "noPOIs": "No POIs added yet"
+  }
+}

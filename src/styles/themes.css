@@ -1,0 +1,170 @@
+/* City Theme System - Unified theme and avatar background colors */
+
+/* Default / Taipei - Brutalist Tech */
+:root,
+[data-theme="taipei"] {
+  --primary-cta: #999999;
+  --bg-surface: #121212;
+  --accent: #00FFCC;
+  --text-main: #FFFFFF;
+  --text-muted: rgba(255, 255, 255, 0.72);
+  --border-color: rgba(0, 255, 204, 0.35);
+  --hover-bg: rgba(0, 255, 204, 0.12);
+  --card-surface: rgba(255, 255, 255, 0.06);
+  --input-surface: rgba(255, 255, 255, 0.08);
+  --on-primary: #121212;
+  --overlay-title-color: var(--on-primary);
+  --radius: 0px;
+  --radius-control: var(--radius);
+  --radius-card: var(--radius);
+  --font-main: 'JetBrains Mono', monospace;
+  --avatar-bg: #999999;
+  --avatar-text: #FFFFFF;
+}
+
+/* Rio de Janeiro - Organic Growth */
+[data-theme="rio"] {
+  --primary-cta: #61BB46;
+  --bg-surface: #F0FFF0;
+  --accent: #FFD700;
+  --text-main: #1B3022;
+  --text-muted: rgba(27, 48, 34, 0.72);
+  --border-color: rgba(255, 215, 0, 0.55);
+  --hover-bg: rgba(255, 215, 0, 0.18);
+  --card-surface: rgba(0, 0, 0, 0.03);
+  --input-surface: rgba(0, 0, 0, 0.04);
+  --on-primary: #FFFFFF;
+  --overlay-title-color: var(--on-primary);
+  --radius: 24px;
+  --radius-control: var(--radius);
+  --radius-card: var(--radius);
+  --font-main: 'Quicksand', sans-serif;
+  --avatar-bg: #61BB46;
+  --avatar-text: #FFFFFF;
+}
+
+/* Los Angeles - Cinematic Retro */
+[data-theme="los_angeles"] {
+  --primary-cta: #FDBD2C;
+  --bg-surface: #3D2B1F;
+  --accent: #87CEEB;
+  --text-main: #F8F8F8;
+  --text-muted: rgba(248, 248, 248, 0.74);
+  --border-color: rgba(135, 206, 235, 0.35);
+  --hover-bg: rgba(135, 206, 235, 0.14);
+  --card-surface: rgba(255, 255, 255, 0.06);
+  --input-surface: rgba(255, 255, 255, 0.08);
+  --on-primary: #3D2B1F;
+  --overlay-title-color: var(--on-primary);
+  --radius: 12px;
+  --radius-control: var(--radius);
+  --radius-card: var(--radius);
+  --font-main: 'Bebas Neue', sans-serif;
+  --avatar-bg: #FDBD2C;
+  --avatar-text: #000000;
+}
+
+/* Amsterdam - Modern Heritage */
+[data-theme="amsterdam"] {
+  --primary-cta: #F58220;
+  --bg-surface: #FAF9F6;
+  --accent: #003366;
+  --text-main: #222222;
+  --text-muted: rgba(34, 34, 34, 0.72);
+  --border-color: rgba(0, 51, 102, 0.35);
+  --hover-bg: rgba(0, 51, 102, 0.08);
+  --card-surface: rgba(0, 0, 0, 0.03);
+  --input-surface: rgba(0, 0, 0, 0.04);
+  --on-primary: #FFFFFF;
+  --overlay-title-color: var(--on-primary);
+  --radius: 8px;
+  --radius-control: var(--radius);
+  --radius-card: var(--radius);
+  --font-main: 'Playfair Display', serif;
+  --avatar-bg: #F58220;
+  --avatar-text: #FFFFFF;
+}
+
+/* Tokyo - Precise Editorial */
+[data-theme="tokyo"] {
+  --primary-cta: #333333;
+  --bg-surface: #FFFFFF;
+  --accent: #E03A3E;
+  --text-main: #1A1A1A;
+  --text-muted: rgba(26, 26, 26, 0.72);
+  --border-color: rgba(224, 58, 62, 0.35);
+  --hover-bg: rgba(224, 58, 62, 0.08);
+  --card-surface: rgba(0, 0, 0, 0.03);
+  --input-surface: rgba(0, 0, 0, 0.04);
+  --on-primary: #FFFFFF;
+  --overlay-title-color: var(--accent);
+  --radius: 4px;
+  --radius-control: var(--radius);
+  --radius-card: var(--radius);
+  --font-main: 'Space Grotesk', sans-serif;
+  --avatar-bg: #333333;
+  --avatar-text: #FFFFFF;
+}
+
+/* Seoul - Cyber-Pop */
+[data-theme="seoul"] {
+  --primary-cta: #963D97;
+  --bg-surface: #0B0114;
+  --accent: #F06292;
+  --text-main: #FFFFFF;
+  --text-muted: rgba(255, 255, 255, 0.72);
+  --border-color: rgba(240, 98, 146, 0.35);
+  --hover-bg: rgba(240, 98, 146, 0.14);
+  --card-surface: rgba(255, 255, 255, 0.06);
+  --input-surface: rgba(255, 255, 255, 0.08);
+  --on-primary: #FFFFFF;
+  --overlay-title-color: var(--on-primary);
+  --radius: 16px 4px 16px 4px;
+  --radius-control: var(--radius);
+  --radius-card: var(--radius);
+  --font-main: 'Syne', sans-serif;
+  --avatar-bg: #963D97;
+  --avatar-text: #FFFFFF;
+}
+
+/* Santorini - Fluid/Coastal */
+[data-theme="santorini"] {
+  --primary-cta: #009DDC;
+  --bg-surface: #FFFFFF;
+  --accent: #E2E8F0;
+  --text-main: #2C3E50;
+  --text-muted: rgba(44, 62, 80, 0.72);
+  --border-color: rgba(226, 232, 240, 1);
+  --hover-bg: rgba(226, 232, 240, 0.5);
+  --card-surface: rgba(0, 0, 0, 0.02);
+  --input-surface: rgba(0, 0, 0, 0.03);
+  --on-primary: #FFFFFF;
+  --overlay-title-color: var(--on-primary);
+  --radius: 100px;
+  --radius-control: 100px;
+  --radius-card: 12px;
+  --font-main: 'Cormorant Garamond', serif;
+  --avatar-bg: #009DDC;
+  --avatar-text: #FFFFFF;
+}
+
+/* Arjeplog - The Hidden Forest (Premium Dark - Admin Only) */
+[data-theme="arjeplog"] {
+  --primary-cta: #F0EEE9;
+  --bg-surface: #1B3022;
+  --accent: #A5F2F3;
+  --text-main: #FFFFFF;
+  --text-muted: rgba(255, 255, 255, 0.72);
+  --border-color: rgba(165, 242, 243, 0.35);
+  --hover-bg: rgba(165, 242, 243, 0.12);
+  --card-surface: rgba(255, 255, 255, 0.06);
+  --input-surface: rgba(255, 255, 255, 0.08);
+  --on-primary: #1B3022;
+  --overlay-title-color: var(--on-primary);
+  --radius: 2px;
+  --radius-control: var(--radius);
+  --radius-card: var(--radius);
+  --font-main: 'Sora', sans-serif;
+  --avatar-bg: #F0EEE9;
+  --avatar-text: #1B3022;
+}

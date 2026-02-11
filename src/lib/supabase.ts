@@ -4,12 +4,6 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-console.log('[Supabase] init:', {
-  urlSet: !!supabaseUrl,
-  urlPreview: supabaseUrl?.slice(0, 30),
-  keySet: !!supabaseAnonKey,
-  keyPreview: supabaseAnonKey?.slice(0, 20),
-});
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Missing Supabase environment variables');
 }
@@ -24,6 +18,33 @@ export const supabase = createClient(
       storage: localStorage,
       autoRefreshToken: true,
       detectSessionInUrl: true,
+    },
+    global: {
+      headers: {},
+      fetch: async (url: RequestInfo | URL, init?: RequestInit) => {
+        // Workaround: supabase-js may not attach the session JWT to REST requests.
+        // Read token from localStorage directly to avoid recursion (getSession triggers fetch).
+        const urlStr = typeof url === 'string' ? url : url.toString();
+        // Skip auth endpoints to avoid infinite loop
+        if (urlStr.includes('/auth/')) {
+          return fetch(url, init);
+        }
+        try {
+          const raw = localStorage.getItem('stargate-auth');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const accessToken = parsed?.access_token;
+            if (accessToken) {
+              const headers = new Headers(init?.headers);
+              headers.set('Authorization', `Bearer ${accessToken}`);
+              return fetch(url, { ...init, headers });
+            }
+          }
+        } catch {
+          // ignore parse errors
+        }
+        return fetch(url, init);
+      },
     },
   }
 );

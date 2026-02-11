@@ -25,20 +25,11 @@ export function Dashboard() {
 
   const fetchTrips = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log('[Dashboard] session check:', { 
-        hasSession: !!session, 
-        userId: session?.user?.id,
-        expiresAt: session?.expires_at,
-        tokenPreview: session?.access_token?.slice(0, 20) + '…',
-      });
-
       const { data, error } = await supabase
         .from('trips')
         .select('*')
         .order('created_at', { ascending: false });
 
-      console.log('[Dashboard] fetchTrips result:', { count: data?.length, error });
       if (error) throw error;
       setTrips(data || []);
     } catch (error) {
@@ -53,45 +44,38 @@ export function Dashboard() {
     if (!newTripTitle.trim()) return;
 
     try {
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      console.log('[Dashboard] session for insert:', {
-        hasSession: !!currentSession,
-        userId: currentSession?.user?.id,
-        tokenType: currentSession?.token_type,
-        tokenPreview: currentSession?.access_token?.slice(0, 30) + '…',
-      });
-
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      console.log('[Dashboard] getUser result:', { userId: user?.id, userError });
-      if (!user) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
         setError('Not authenticated — please log in again.');
         return;
       }
 
-      // Debug: check what token supabase-js is actually sending
-      const { data: { session: sess } } = await supabase.auth.getSession();
-      console.log('[Dashboard] token being used:', {
-        hasAccessToken: !!sess?.access_token,
-        tokenStart: sess?.access_token?.slice(0, 40),
-        tokenLength: sess?.access_token?.length,
+      // Use raw fetch — don't request return=representation to avoid SELECT policy check
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const resp = await fetch(`${supabaseUrl}/rest/v1/trips`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': anonKey,
+          'Authorization': `Bearer ${session.access_token}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          user_id: session.user.id,
+          title: newTripTitle.trim(),
+        }),
       });
 
-      const { data, error } = await supabase
-        .from('trips')
-        .insert([{
-          user_id: user.id,
-          title: newTripTitle.trim(),
-        }])
-        .select()
-        .single();
-
-      console.log('[Dashboard] insert result:', { data, error });
-      if (error) throw error;
-      if (data) {
-        setTrips([data, ...trips]);
-        setNewTripTitle('');
-        setIsCreating(false);
+      if (!resp.ok) {
+        const errBody = await resp.text();
+        throw new Error(`${resp.status}: ${errBody}`);
       }
+
+      // Re-fetch trips since we didn't get the inserted row back
+      await fetchTrips();
+      setNewTripTitle('');
+      setIsCreating(false);
     } catch (err: any) {
       const msg = err?.message || err?.details || JSON.stringify(err);
       console.error('Error creating trip:', err);

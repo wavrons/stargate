@@ -248,7 +248,10 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-main)' }}>
+    <div
+      className="min-h-screen"
+      style={{ background: 'var(--bg-main)', display: 'flex', flexDirection: 'column' }}
+    >
       <header
         style={{
           borderBottom: '1px solid var(--border-color)',
@@ -444,7 +447,7 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
         </div>
       </header>
 
-      <main>
+      <main style={{ flex: 1 }}>
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/trip/:id" element={<TripDetail />} />

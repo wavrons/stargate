@@ -141,7 +141,7 @@ export function Dashboard() {
             key={trip.id} 
             className="group relative cursor-pointer rounded-xl p-6 shadow-sm transition-all hover:shadow-md"
             style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}
-            onClick={() => navigate(`/trip/${trip.id}/board`)}
+            onClick={() => navigate(`/trip/${trip.id}`)}
           >
             <h3 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text-main)' }}>{trip.title}</h3>
             <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{t('dashboard.created')} {new Date(trip.created_at).toLocaleDateString()}</p>

@@ -13,9 +13,12 @@ type PortalRow = {
 };
 
 type SnapshotPayload = {
+  cover_image_url?: string;
+  trip_meta?: string;
+  logistics?: Array<{ label: string; value: string }>;
   days: Array<{
     label: string;
-    entries: Array<{ id: string; title: string; url?: string; description?: string }>;
+    entries: Array<{ id: string; title: string; url?: string; description?: string; thumbnail_url?: string }>;
   }>;
   receipts: Array<{ id: string; title: string; url: string; kind: string }>;
 };
@@ -120,9 +123,10 @@ export function Itinerary({ embedded }: { embedded?: boolean } = {}) {
             title: b.title || '(untitled)',
             url: b.url,
             description: b.description,
+            thumbnail_url: b.thumbnail_url,
           };
         })
-        .filter(Boolean) as Array<{ id: string; title: string; url?: string; description?: string }>;
+        .filter(Boolean) as Array<{ id: string; title: string; url?: string; description?: string; thumbnail_url?: string }>;
       return { label, entries: mapped };
     });
 
@@ -133,7 +137,20 @@ export function Itinerary({ embedded }: { embedded?: boolean } = {}) {
       kind: a.kind,
     }));
 
-    return { days, receipts };
+    const scheduledCount = entries.length;
+    const tripMeta = `${dayLabels.length} Days • ${scheduledCount} Places`;
+
+    const logistics: Array<{ label: string; value: string }> = [];
+    if (trip?.flight_number) logistics.push({ label: 'Flight', value: trip.flight_number });
+    if (trip?.stay_name) logistics.push({ label: 'Stay', value: trip.stay_name });
+
+    return {
+      cover_image_url: trip?.cover_image_url ?? undefined,
+      trip_meta: tripMeta,
+      logistics,
+      days,
+      receipts,
+    };
   };
 
   const upsertSnapshot = async (token: string, tripTitle: string) => {

@@ -6,6 +6,10 @@ export function Home() {
   return (
     <div className="home-page">
       <div className="home-page__content">
+        <div className="home-page__brand" aria-label="Lyra">
+          <img className="home-page__logo" src="/logo.svg" alt="lyra" />
+          <div className="home-page__wordmark">lyra</div>
+        </div>
         <blockquote className="home-page__quote">
           讓唐僧成為唐僧的，<br />不是經書，而是取經的那條路
         </blockquote>

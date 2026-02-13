@@ -719,7 +719,7 @@ function App() {
             <Route path="/waitlist" element={<Waitlist />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-          <Footer />
+          <Footer fixed />
         </>
       )}
       {/* Authenticated routes */}

@@ -183,7 +183,7 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
       const label = getAvatarLabel(labelSource);
       const themeKey = settings?.city_theme && BG[settings.city_theme]
         ? settings.city_theme
-        : 'taipei';
+        : 'tokyo';
       const avatarSvg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
   <defs>
@@ -564,8 +564,8 @@ function App() {
     if (lastRoutePathRef.current === location.pathname) return;
     lastRoutePathRef.current = location.pathname;
 
-    const activeTheme = document.documentElement.getAttribute('data-theme') ?? 'taipei';
-    const label = CITY_THEME_LABELS[activeTheme] ?? CITY_THEME_LABELS.taipei;
+    const activeTheme = document.documentElement.getAttribute('data-theme') ?? 'tokyo';
+    const label = CITY_THEME_LABELS[activeTheme] ?? CITY_THEME_LABELS.tokyo;
 
     showOverlay(label, 'infinite', false);
     hideOverlay();
@@ -621,7 +621,7 @@ function App() {
     const run = async () => {
       if (!session?.user) {
         // Not logged in: quick infinite overlay with fallback theme
-        const fallback = 'taipei';
+        const fallback = 'tokyo';
         showOverlay(CITY_THEME_LABELS[fallback], 'infinite');
         applyCityTheme(fallback);
         hideOverlay();
@@ -637,7 +637,7 @@ function App() {
 
       if (!profile || !profile.onboarded) {
         // First-time user: show onboarding using current or stored theme
-        let initialTheme = 'taipei';
+        let initialTheme = 'tokyo';
         try {
           const stored = localStorage.getItem('city_theme');
           if (stored) initialTheme = stored;
@@ -662,8 +662,8 @@ function App() {
         .eq('user_id', session.user.id)
         .maybeSingle();
 
-      const themeKey = !error && data?.city_theme ? data.city_theme : 'taipei';
-      const label = CITY_THEME_LABELS[themeKey] ?? CITY_THEME_LABELS.taipei;
+      const themeKey = !error && data?.city_theme ? data.city_theme : 'tokyo';
+      const label = CITY_THEME_LABELS[themeKey] ?? CITY_THEME_LABELS.tokyo;
 
       // Apply theme behind the overlay, then update label
       applyCityTheme(themeKey);

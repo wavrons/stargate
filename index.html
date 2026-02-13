@@ -7,10 +7,10 @@
     <script>
       (function () {
         try {
-          var t = localStorage.getItem('city_theme') || 'taipei';
+          var t = localStorage.getItem('city_theme') || 'tokyo';
           document.documentElement.setAttribute('data-theme', t);
         } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'taipei');
+          document.documentElement.setAttribute('data-theme', 'tokyo');
         }
       })();
     </script>

@@ -45,8 +45,8 @@ export function Onboarding({
   isPreview,
   forceIsAdmin,
 }: OnboardingProps) {
-  const initialThemeKey = 'taipei';
-  const initialThemeLabel = CITY_THEMES.find((theme) => theme.key === initialThemeKey)?.label ?? 'Taipei';
+  const initialThemeKey = 'tokyo';
+  const initialThemeLabel = CITY_THEMES.find((theme) => theme.key === initialThemeKey)?.label ?? 'Tokyo';
   const [step, setStep] = useState<Step>('welcome');
   const [displayName, setDisplayName] = useState(prefillName ?? '');
 

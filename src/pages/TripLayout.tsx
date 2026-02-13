@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { supabase, type Trip } from '../lib/supabase';
 import { Button } from '../components/Button';
+import { SFPersonCircleFill, SFDiagnostics, SFUsage } from '../components/SFSymbols';
 
 export function TripLayout() {
   const { id } = useParams();
@@ -34,18 +35,27 @@ export function TripLayout() {
               to={id ? `/trip/${id}/details` : '#'}
               className={`account-tab ${detailsActive ? 'account-tab--active' : ''}`}
             >
+              <span className="account-tab__icon-wrap">
+                <SFPersonCircleFill className="account-tab__icon" />
+              </span>
               <span>Details</span>
             </Link>
             <Link
               to={id ? `/trip/${id}/board` : '#'}
               className={`account-tab ${isBoard ? 'account-tab--active' : ''}`}
             >
+              <span className="account-tab__icon-wrap">
+                <SFDiagnostics className="account-tab__icon" />
+              </span>
               <span>Board</span>
             </Link>
             <Link
               to={id ? `/trip/${id}/itinerary` : '#'}
               className={`account-tab ${isItinerary ? 'account-tab--active' : ''}`}
             >
+              <span className="account-tab__icon-wrap">
+                <SFUsage className="account-tab__icon" />
+              </span>
               <span>Itinerary</span>
             </Link>
           </div>

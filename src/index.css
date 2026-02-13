@@ -843,6 +843,14 @@ nav a:hover {
   max-width: 100%;
 }
 
+.board-page__header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
 .board-page__breadcrumb {
   display: flex;
   align-items: center;

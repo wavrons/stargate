@@ -6,6 +6,7 @@ import { BoardCard } from '../components/BoardCard';
 import { ImageUpload } from '../components/ImageUpload';
 import { RefreshBanner } from '../components/RefreshBanner';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { ShareModal } from '../components/ShareModal';
 import { useTripVersionPoll } from '../hooks/useTripVersionPoll';
 import { supabase, type Trip, type BoardItem, type ColorTag } from '../lib/supabase';
 import { TRIP_STORAGE_LIMIT_BYTES } from '../config';
@@ -49,6 +50,7 @@ export function Board() {
   const [previewItem, setPreviewItem] = useState<BoardItem | null>(null);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   const { stale, acknowledge } = useTripVersionPoll(id);
 
@@ -281,20 +283,26 @@ export function Board() {
 
         {/* Breadcrumb Header */}
         <div className="board-page__header">
-          <div className="board-page__breadcrumb">
-            <button
-              type="button"
-              onClick={() => navigate('/dashboard')}
-              className="board-page__breadcrumb-link"
-              style={{ color: 'var(--text-muted)' }}
-            >
-              <ChevronLeft className="mr-1 h-4 w-4 inline" />
-              Dashboard
-            </button>
-            <span className="board-page__breadcrumb-sep">/</span>
-            <span className="board-page__breadcrumb-current" style={{ color: 'var(--text-main)' }}>
-              {trip.title}
-            </span>
+          <div className="board-page__header-top">
+            <div className="board-page__breadcrumb">
+              <button
+                type="button"
+                onClick={() => navigate('/dashboard')}
+                className="board-page__breadcrumb-link"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                <ChevronLeft className="mr-1 h-4 w-4 inline" />
+                Dashboard
+              </button>
+              <span className="board-page__breadcrumb-sep">/</span>
+              <span className="board-page__breadcrumb-current" style={{ color: 'var(--text-main)' }}>
+                {trip.title}
+              </span>
+            </div>
+            <Button variant="secondary" size="sm" onClick={() => setShareModalOpen(true)}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Share
+            </Button>
           </div>
           <h1 className="board-page__title">{trip.title}</h1>
           <p className="board-page__subtitle">Board</p>
@@ -426,6 +434,13 @@ export function Board() {
       >
         <ChevronRight className="board-preview-toggle__icon" />
       </button>
+
+      {shareModalOpen && id && (
+        <ShareModal 
+          tripId={id} 
+          onClose={() => setShareModalOpen(false)} 
+        />
+      )}
 
       {previewOpen && (
         <aside className="side-browser side-browser--open" aria-hidden={false}>

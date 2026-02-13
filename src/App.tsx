@@ -95,6 +95,7 @@ function ThemeBootOverlay({
 function AuthedApp({ onLogout }: { onLogout: () => void }) {
   const { t, i18n } = useTranslation();
   const location = useLocation();
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -264,7 +265,7 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 p-4">
           <div className="flex items-center gap-4">
             <img
-              src={`${import.meta.env.BASE_URL}logo.svg`}
+              src={`${import.meta.env.BASE_URL}${isLocalhost ? 'dev-logo.svg' : 'logo.svg'}`}
               alt={t('app.title')}
               style={{ width: 28, height: 28, borderRadius: 8, display: 'block' }}
             />

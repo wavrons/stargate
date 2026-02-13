@@ -2,10 +2,15 @@ import { useNavigate } from 'react-router-dom';
 
 export function Home() {
   const navigate = useNavigate();
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   return (
     <div className="home-page">
-      <img className="home-page__corner-logo" src={`${import.meta.env.BASE_URL}logo.svg`} alt="lyra" />
+      <img
+        className="home-page__corner-logo"
+        src={`${import.meta.env.BASE_URL}${isLocalhost ? 'dev-logo.svg' : 'logo.svg'}`}
+        alt="lyra"
+      />
       <div className="home-page__content">
         <blockquote className="home-page__quote">
           讓唐僧成為唐僧的，<br />不是經書，而是取經的那條路

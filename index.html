@@ -12,6 +12,22 @@
         } catch (e) {
           document.documentElement.setAttribute('data-theme', 'tokyo');
         }
+
+        var isLocalhost =
+          window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (isLocalhost) {
+          var base = '%BASE_URL%';
+          var icon = document.querySelector('link[rel="icon"]');
+          if (icon) icon.setAttribute('href', base + 'dev-favicon.svg');
+
+          var r = document.documentElement;
+          r.style.setProperty('--bg-surface', '#000000');
+          r.style.setProperty('--card-surface', 'rgba(255, 255, 255, 0.08)');
+          r.style.setProperty('--text-main', '#FFFFFF');
+          r.style.setProperty('--text-muted', 'rgba(255, 255, 255, 0.72)');
+          r.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.16)');
+          r.style.setProperty('--hover-bg', 'rgba(255, 255, 255, 0.10)');
+        }
       })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />

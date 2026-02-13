@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
@@ -46,7 +46,18 @@ export function Waitlist() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center px-4" style={{ background: 'var(--bg-main)' }}>
+      <div className="flex min-h-screen items-center justify-center px-4" style={{ background: 'var(--bg-main)', position: 'relative' }}>
+        <Link
+          to="/"
+          aria-label={t('app.title')}
+          style={{ position: 'absolute', top: 16, left: 16 }}
+        >
+          <img
+            src={`${import.meta.env.BASE_URL}logo.svg`}
+            alt={t('app.title')}
+            style={{ width: 28, height: 28, borderRadius: 8, display: 'block' }}
+          />
+        </Link>
         <div className="w-full max-w-md rounded-2xl p-8 shadow-xl text-center" style={{ background: 'var(--card-surface)' }}>
           <div className="mb-4 text-6xl">✅</div>
           <h1 className="mb-2 text-2xl font-bold" style={{ color: 'var(--text-main)' }}>
@@ -64,7 +75,18 @@ export function Waitlist() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4" style={{ background: 'var(--bg-main)' }}>
+    <div className="flex min-h-screen items-center justify-center px-4" style={{ background: 'var(--bg-main)', position: 'relative' }}>
+      <Link
+        to="/"
+        aria-label={t('app.title')}
+        style={{ position: 'absolute', top: 16, left: 16 }}
+      >
+        <img
+          src={`${import.meta.env.BASE_URL}logo.svg`}
+          alt={t('app.title')}
+          style={{ width: 28, height: 28, borderRadius: 8, display: 'block' }}
+        />
+      </Link>
       <div className="w-full max-w-md rounded-2xl p-8 shadow-xl" style={{ background: 'var(--card-surface)' }}>
         <h1 className="mb-2 text-center text-3xl font-bold" style={{ color: 'var(--text-main)' }}>
           {t('waitlist.title')}

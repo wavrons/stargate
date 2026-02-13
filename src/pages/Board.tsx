@@ -273,6 +273,12 @@ export function Board() {
   const previewTitle = previewUrl ?? (previewItem?.title ?? 'Preview');
   const previewOpen = previewVisible && !!previewItem;
 
+  const [iframeError, setIframeError] = useState(false);
+
+  useEffect(() => {
+    setIframeError(false);
+  }, [previewUrl]);
+
   if (loading) return null;
   if (!trip) return <div className="p-6">Trip not found</div>;
 
@@ -497,13 +503,21 @@ export function Board() {
 
               <div className="side-browser__body">
                 {previewUrl ? (
-                  <iframe
-                    key={previewUrl}
-                    src={previewUrl}
-                    title={previewTitle}
-                    className="side-browser__frame"
-                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                  />
+                  iframeError ? (
+                    <div className="side-browser__empty">
+                      Preview is unavailable for this site (it may block embedding). Use “Open tab” instead.
+                    </div>
+                  ) : (
+                    <iframe
+                      key={previewUrl}
+                      src={previewUrl}
+                      title={previewTitle}
+                      className="side-browser__frame"
+                      referrerPolicy="no-referrer"
+                      sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms"
+                      onError={() => setIframeError(true)}
+                    />
+                  )
                 ) : (
                   <p className="side-browser__empty">
                     This note doesn’t contain a link we can preview. Use the external link button instead.

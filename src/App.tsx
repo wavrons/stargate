@@ -264,11 +264,13 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 p-4">
           <div className="flex items-center gap-4">
-            <img
-              src={`${import.meta.env.BASE_URL}${isLocalhost ? 'dev-logo.svg' : 'logo.svg'}`}
-              alt={t('app.title')}
-              style={{ width: 28, height: 28, borderRadius: 8, display: 'block' }}
-            />
+            <Link to="/" aria-label={t('app.title')}>
+              <img
+                src={`${import.meta.env.BASE_URL}${isLocalhost ? 'dev-logo.svg' : 'logo.svg'}`}
+                alt={t('app.title')}
+                style={{ width: 28, height: 28, borderRadius: 8, display: 'block' }}
+              />
+            </Link>
             {!isBoard && (
               <nav className="flex items-center gap-2">
                 <Link

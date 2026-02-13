@@ -107,8 +107,6 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
   const accountCloseTimer = useRef<number | null>(null);
   const langCloseTimer = useRef<number | null>(null);
 
-  const isDashboard = location.pathname === '/dashboard' || location.pathname.startsWith('/trip/');
-  const isItinerary = location.pathname.startsWith('/itinerary');
   const isAccountPage = location.pathname.startsWith('/account');
   const isBoard = location.pathname.includes('/board');
 
@@ -272,24 +270,7 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
                 style={{ width: 28, height: 28, borderRadius: 8, display: 'block' }}
               />
             </Link>
-            {!isBoard && (
-              <nav className="flex items-center gap-2">
-                <Link
-                  to="/dashboard"
-                  className="rounded-lg px-3 py-2 text-sm font-medium"
-                  style={isDashboard ? { background: 'var(--accent-muted, rgba(0,0,0,0.06))', color: 'var(--accent)' } : { color: 'var(--text-muted)' }}
-                >
-                  {t('nav.tripPlanner')}
-                </Link>
-                <Link
-                  to="/itinerary"
-                  className="rounded-lg px-3 py-2 text-sm font-medium"
-                  style={isItinerary ? { background: 'var(--accent-muted, rgba(0,0,0,0.06))', color: 'var(--accent)' } : { color: 'var(--text-muted)' }}
-                >
-                  {t('nav.itinerary')}
-                </Link>
-              </nav>
-            )}
+            {!isBoard && null}
           </div>
 
           <div className="flex items-center gap-2">
@@ -458,8 +439,8 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
             <Route index element={<TripDetail embedded={true} />} />
             <Route path="details" element={<TripDetail embedded={true} />} />
             <Route path="board" element={<Board embedded />} />
+            <Route path="itinerary" element={<Itinerary embedded />} />
           </Route>
-          <Route path="/itinerary" element={<Itinerary />} />
           <Route path="/account" element={<Account />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

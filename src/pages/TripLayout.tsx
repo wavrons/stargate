@@ -19,7 +19,8 @@ export function TripLayout() {
   }, [id]);
 
   const isBoard = location.pathname.endsWith('/board');
-  const detailsActive = !isBoard;
+  const isItinerary = location.pathname.endsWith('/itinerary');
+  const detailsActive = !isBoard && !isItinerary;
 
   return (
     <div className="mx-auto max-w-6xl p-6">
@@ -40,6 +41,12 @@ export function TripLayout() {
               className={`account-tab ${isBoard ? 'account-tab--active' : ''}`}
             >
               <span>Board</span>
+            </Link>
+            <Link
+              to={id ? `/trip/${id}/itinerary` : '#'}
+              className={`account-tab ${isItinerary ? 'account-tab--active' : ''}`}
+            >
+              <span>Itinerary</span>
             </Link>
           </div>
         </aside>

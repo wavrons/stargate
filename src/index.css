@@ -1683,11 +1683,125 @@ nav a:hover {
 
 .account-content {
   min-width: 0;
-  padding: 36px 8px 120px 0;
+  padding: 36px 8px 48px 0;
+}
+
+.trip-content {
+  padding-bottom: 48px;
 }
 
 .trip-content--board {
   padding: 0;
+}
+
+.public-portal {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  font-weight: var(--font-weight);
+  letter-spacing: var(--letter-spacing);
+  min-height: 100vh;
+}
+
+.public-portal .hero {
+  height: 40vh;
+  display: flex;
+  align-items: flex-end;
+  padding: 2rem;
+  background: linear-gradient(transparent, var(--bg-surface));
+  background-size: cover;
+  background-position: center;
+}
+
+.public-portal .trip-title {
+  font-size: 3rem;
+  text-transform: uppercase;
+  border-left: 8px solid var(--accent);
+  padding-left: 1rem;
+}
+
+.public-portal .trip-meta {
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+}
+
+.public-portal .logistics-bar {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.public-portal .log-item {
+  font-size: 0.875rem;
+  color: var(--text-main);
+}
+
+.public-portal .log-item span {
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.public-portal .itinerary-feed {
+  padding: 2rem;
+}
+
+.public-portal .day-block {
+  margin-bottom: 2rem;
+}
+
+.public-portal .day-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.public-portal .poi-card {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(128, 128, 128, 0.05);
+  border-radius: var(--radius);
+}
+
+.public-portal .poi-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  flex: 0 0 auto;
+}
+
+.public-portal .poi-content h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.public-portal .poi-content p {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+.public-portal .poi-links {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.public-portal .map-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.public-portal .map-link:hover {
+  text-decoration: underline;
 }
 
 .account-content__header {

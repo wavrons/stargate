@@ -51,7 +51,7 @@ export function TripLayout() {
           </div>
         </aside>
 
-        <div className={`account-content ${isBoard ? 'trip-content--board' : ''}`}>
+        <div className={`account-content trip-content ${isBoard ? 'trip-content--board' : ''}`}>
           <div style={{ marginBottom: 16 }}>
             <Button variant="secondary" size="sm" onClick={() => navigate('/dashboard')}>
               Back to Dashboard

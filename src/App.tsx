@@ -261,7 +261,7 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 p-4">
           <div className="flex items-center gap-4">
             <img
-              src="/logo.svg"
+              src={`${import.meta.env.BASE_URL}logo.svg`}
               alt={t('app.title')}
               style={{ width: 28, height: 28, borderRadius: 8, display: 'block' }}
             />

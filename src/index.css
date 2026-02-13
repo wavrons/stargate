@@ -1019,7 +1019,7 @@ nav a:hover {
 .side-browser__scrim {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.25);
+  background: transparent;
   border: none;
   opacity: 0;
   transition: opacity 200ms ease;
@@ -1027,8 +1027,8 @@ nav a:hover {
 }
 
 .side-browser--open .side-browser__scrim {
-  opacity: 1;
-  pointer-events: auto;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .side-browser__panel {
@@ -1130,7 +1130,7 @@ nav a:hover {
 
 @media (max-width: 900px) {
   .side-browser {
-    --preview-panel-width: 100vw;
+    --preview-panel-width: min(420px, 100vw);
   }
 }
 

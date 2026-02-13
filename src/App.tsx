@@ -15,6 +15,7 @@ import { Account } from './pages/Account';
 import { Board } from './pages/Board';
 import { Home } from './pages/Home';
 import { Onboarding } from './pages/Onboarding';
+import { TripLayout } from './pages/TripLayout';
 import type { Session } from '@supabase/supabase-js';
 
 const CITY_THEME_LABELS: Record<string, string> = {
@@ -453,8 +454,11 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
       <main style={{ flex: 1 }}>
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/trip/:id" element={<TripDetail />} />
-          <Route path="/trip/:id/board" element={<Board />} />
+          <Route path="/trip/:id" element={<TripLayout />}>
+            <Route index element={<TripDetail embedded={true} />} />
+            <Route path="details" element={<TripDetail embedded={true} />} />
+            <Route path="board" element={<Board embedded />} />
+          </Route>
           <Route path="/itinerary" element={<Itinerary />} />
           <Route path="/account" element={<Account />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

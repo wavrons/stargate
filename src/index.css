@@ -1686,6 +1686,10 @@ nav a:hover {
   padding: 36px 8px 120px 0;
 }
 
+.trip-content--board {
+  padding: 0;
+}
+
 .account-content__header {
   display: flex;
   align-items: center;

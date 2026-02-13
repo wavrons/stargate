@@ -274,54 +274,64 @@ export function Board() {
   if (!trip) return <div className="p-6">Trip not found</div>;
 
   return (
-    <div className="mx-auto max-w-6xl p-6 board-page">
+    <div className="board-page">
       <div className="board-page__main">
         <RefreshBanner visible={stale} onRefresh={handleRefresh} />
 
-        {/* Header */}
-        <div className="mb-6 flex flex-wrap items-center gap-4">
-          <Button variant="secondary" size="sm" onClick={() => navigate('/dashboard')} className="mb-4">
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Dashboard
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-main)' }}>{trip.title}</h1>
-            <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>Board</p>
+        {/* Breadcrumb Header */}
+        <div className="board-page__header">
+          <div className="board-page__breadcrumb">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="board-page__breadcrumb-link"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              <ChevronLeft className="mr-1 h-4 w-4 inline" />
+              Dashboard
+            </button>
+            <span className="board-page__breadcrumb-sep">/</span>
+            <span className="board-page__breadcrumb-current" style={{ color: 'var(--text-main)' }}>
+              {trip.title}
+            </span>
           </div>
+          <h1 className="board-page__title">{trip.title}</h1>
+          <p className="board-page__subtitle">Board</p>
         </div>
 
-        {/* Input area */}
-        <div className="mb-6 space-y-3">
-          <BoardPasteInput onParsed={handleParsed} onNote={handleNote} />
-          <ImageUpload
-            onUpload={handleImageUpload}
-            storageUsed={trip.storage_used_bytes ?? 0}
-            storageLimit={TRIP_STORAGE_LIMIT_BYTES}
-          />
-        </div>
+        <div className="board-page__content">
+          {/* Input area */}
+          <div className="mb-6 space-y-3">
+            <BoardPasteInput onParsed={handleParsed} onNote={handleNote} />
+            <ImageUpload
+              onUpload={handleImageUpload}
+              storageUsed={trip.storage_used_bytes ?? 0}
+              storageLimit={TRIP_STORAGE_LIMIT_BYTES}
+            />
+          </div>
 
-        {/* Group-by toggle */}
-        <div className="mb-4 flex items-center gap-1">
-          <span className="mr-2 text-xs font-medium" style={{ color: 'var(--text-muted)' }}>Group by:</span>
-          {GROUP_BY_OPTIONS.map(opt => {
-            const Icon = opt.icon;
-            const active = groupBy === opt.value;
-            return (
-              <button
-                key={opt.value}
-                className="board-group-btn"
-                data-active={active || undefined}
-                onClick={() => setGroupBy(opt.value)}
-              >
-                <Icon className="h-3 w-3" />
-                {opt.label}
-              </button>
-            );
-          })}
-        </div>
+          {/* Group-by toggle */}
+          <div className="mb-6 flex items-center gap-1">
+            <span className="mr-2 text-xs font-medium" style={{ color: 'var(--text-muted)' }}>Group by:</span>
+            {GROUP_BY_OPTIONS.map(opt => {
+              const Icon = opt.icon;
+              const active = groupBy === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  className="board-group-btn"
+                  data-active={active || undefined}
+                  onClick={() => setGroupBy(opt.value)}
+                >
+                  <Icon className="h-3 w-3" />
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Board grid */}
-        {grouped.map(([label, groupItems]) => (
+          {/* Board grid */}
+          {grouped.map(([label, groupItems]) => (
           <section key={label} className="mb-6">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
               {label}
@@ -340,41 +350,42 @@ export function Board() {
           </section>
         ))}
 
-        {items.length === 0 && (
-          <div
-            className="rounded-xl border border-dashed p-12 text-center"
-            style={{ color: 'var(--text-muted)', borderColor: 'var(--border-color)' }}
-          >
-            Paste a link, drop an image, or type a note to get started.
-          </div>
-        )}
+          {items.length === 0 && (
+            <div
+              className="rounded-xl border border-dashed p-12 text-center"
+              style={{ color: 'var(--text-muted)', borderColor: 'var(--border-color)' }}
+            >
+              Paste a link, drop an image, or type a note to get started.
+            </div>
+          )}
 
-        {/* Delete confirmation */}
-        <ConfirmModal
-          open={!!pendingDeleteId}
-          title="Delete item?"
-          message="Are you sure you want to remove this from the board?"
-          confirmLabel="Delete"
-          cancelLabel="Cancel"
-          variant="danger"
-          onConfirm={() => {
-            if (pendingDeleteId) void handleDelete(pendingDeleteId);
-            setPendingDeleteId(null);
-          }}
-          onCancel={() => setPendingDeleteId(null)}
-        />
+          {/* Delete confirmation */}
+          <ConfirmModal
+            open={!!pendingDeleteId}
+            title="Delete item?"
+            message="Are you sure you want to remove this from the board?"
+            confirmLabel="Delete"
+            cancelLabel="Cancel"
+            variant="danger"
+            onConfirm={() => {
+              if (pendingDeleteId) void handleDelete(pendingDeleteId);
+              setPendingDeleteId(null);
+            }}
+            onCancel={() => setPendingDeleteId(null)}
+          />
 
-        {/* Error modal */}
-        <ConfirmModal
-          open={!!errorMsg}
-          title="Error"
-          message={errorMsg ?? ''}
-          confirmLabel="OK"
-          cancelLabel="Close"
-          variant="primary"
-          onConfirm={() => setErrorMsg(null)}
-          onCancel={() => setErrorMsg(null)}
-        />
+          {/* Error modal */}
+          <ConfirmModal
+            open={!!errorMsg}
+            title="Error"
+            message={errorMsg ?? ''}
+            confirmLabel="OK"
+            cancelLabel="Close"
+            variant="primary"
+            onConfirm={() => setErrorMsg(null)}
+            onCancel={() => setErrorMsg(null)}
+          />
+        </div>
       </div>
 
       <button

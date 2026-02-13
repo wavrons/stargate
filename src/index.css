@@ -825,11 +825,81 @@ nav a:hover {
 .board-page {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 24px;
+  gap: 0;
+  min-height: 100vh;
 }
 
 .board-page__main {
   min-width: 0;
+  padding: 0;
+}
+
+.board-page__header {
+  background: var(--card-surface);
+  border-bottom: 1px solid var(--border-color);
+  padding: 24px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+.board-page__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.board-page__breadcrumb-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.board-page__breadcrumb-link:hover {
+  color: var(--accent) !important;
+}
+
+.board-page__breadcrumb-sep {
+  opacity: 0.5;
+}
+
+.board-page__breadcrumb-current {
+  font-weight: 600;
+}
+
+.board-page__title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: var(--text-main);
+}
+
+.board-page__subtitle {
+  font-size: 14px;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.board-page__content {
+  padding: 24px;
+  max-width: 100%;
+}
+
+.board-page__main > section {
+  background: var(--hover-bg);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.board-page__main > section > h2 {
+  margin: 0 0 16px 0 !important;
+  padding: 0 !important;
 }
 
 

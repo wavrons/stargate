@@ -107,6 +107,7 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
   const isDashboard = location.pathname === '/dashboard' || location.pathname.startsWith('/trip/');
   const isItinerary = location.pathname.startsWith('/itinerary');
   const isAccountPage = location.pathname.startsWith('/account');
+  const isBoard = location.pathname.includes('/board');
 
   const isCjk = (value: string) => /[\u3400-\u9FFF\uF900-\uFAFF]/.test(value);
   const getAvatarLabel = (value: string) => {
@@ -259,22 +260,24 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 p-4">
           <div className="flex items-center gap-4">
             <div className="text-base font-semibold" style={{ color: 'var(--text-main)' }}>{t('app.title')}</div>
-            <nav className="flex items-center gap-2">
-              <Link
-                to="/dashboard"
-                className="rounded-lg px-3 py-2 text-sm font-medium"
-                style={isDashboard ? { background: 'var(--accent-muted, rgba(0,0,0,0.06))', color: 'var(--accent)' } : { color: 'var(--text-muted)' }}
-              >
-                {t('nav.tripPlanner')}
-              </Link>
-              <Link
-                to="/itinerary"
-                className="rounded-lg px-3 py-2 text-sm font-medium"
-                style={isItinerary ? { background: 'var(--accent-muted, rgba(0,0,0,0.06))', color: 'var(--accent)' } : { color: 'var(--text-muted)' }}
-              >
-                {t('nav.itinerary')}
-              </Link>
-            </nav>
+            {!isBoard && (
+              <nav className="flex items-center gap-2">
+                <Link
+                  to="/dashboard"
+                  className="rounded-lg px-3 py-2 text-sm font-medium"
+                  style={isDashboard ? { background: 'var(--accent-muted, rgba(0,0,0,0.06))', color: 'var(--accent)' } : { color: 'var(--text-muted)' }}
+                >
+                  {t('nav.tripPlanner')}
+                </Link>
+                <Link
+                  to="/itinerary"
+                  className="rounded-lg px-3 py-2 text-sm font-medium"
+                  style={isItinerary ? { background: 'var(--accent-muted, rgba(0,0,0,0.06))', color: 'var(--accent)' } : { color: 'var(--text-muted)' }}
+                >
+                  {t('nav.itinerary')}
+                </Link>
+              </nav>
+            )}
           </div>
 
           <div className="flex items-center gap-2">

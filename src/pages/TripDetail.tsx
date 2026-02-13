@@ -282,70 +282,70 @@ export function TripDetail({ embedded }: { embedded?: boolean } = {}) {
       <div className="space-y-6">
         <div>
           <h2 className="vault-section__title">Basic Info</h2>
-          <div className="vault-section__body">
+          <div className="rounded-xl border p-5" style={{ background: 'var(--card-surface)', borderColor: 'var(--border-color)' }}>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="md:col-span-2">
-                <label className="mb-1 block text-sm font-medium">Cover Image URL</label>
-                <Input
-                  value={detailsDraft.cover_image_url}
-                  onChange={(e) => setDetailsDraft({ ...detailsDraft, cover_image_url: e.target.value })}
-                  placeholder="https://..."
-                />
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="mb-2 block text-sm font-medium">Dates</label>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant={detailsDraft.date_mode === 'fixed' ? 'primary' : 'secondary'}
-                    size="sm"
-                    onClick={() => setDetailsDraft({ ...detailsDraft, date_mode: 'fixed' })}
-                  >
-                    Fixed Dates
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={detailsDraft.date_mode === 'flex' ? 'primary' : 'secondary'}
-                    size="sm"
-                    onClick={() => setDetailsDraft({ ...detailsDraft, date_mode: 'flex' })}
-                  >
-                    Duration
-                  </Button>
-                </div>
-              </div>
-
-              {detailsDraft.date_mode === 'fixed' ? (
-                <>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium">Start Date</label>
-                    <Input
-                      type="date"
-                      value={detailsDraft.start_date}
-                      onChange={(e) => setDetailsDraft({ ...detailsDraft, start_date: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium">End Date</label>
-                    <Input
-                      type="date"
-                      value={detailsDraft.end_date}
-                      onChange={(e) => setDetailsDraft({ ...detailsDraft, end_date: e.target.value })}
-                    />
-                  </div>
-                </>
-              ) : (
-                <div>
-                  <label className="mb-1 block text-sm font-medium">Nights</label>
+                <div className="md:col-span-2">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--accent)' }}>Cover Image URL</label>
                   <Input
-                    type="number"
-                    min={1}
-                    value={detailsDraft.duration_nights}
-                    onChange={(e) => setDetailsDraft({ ...detailsDraft, duration_nights: e.target.value })}
-                    placeholder="7"
+                    value={detailsDraft.cover_image_url}
+                    onChange={(e) => setDetailsDraft({ ...detailsDraft, cover_image_url: e.target.value })}
+                    placeholder="https://..."
                   />
                 </div>
-              )}
+
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--accent)' }}>Dates</label>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant={detailsDraft.date_mode === 'fixed' ? 'primary' : 'secondary'}
+                      size="sm"
+                      onClick={() => setDetailsDraft({ ...detailsDraft, date_mode: 'fixed' })}
+                    >
+                      Fixed Dates
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={detailsDraft.date_mode === 'flex' ? 'primary' : 'secondary'}
+                      size="sm"
+                      onClick={() => setDetailsDraft({ ...detailsDraft, date_mode: 'flex' })}
+                    >
+                      Duration
+                    </Button>
+                  </div>
+                </div>
+
+                {detailsDraft.date_mode === 'fixed' ? (
+                  <>
+                    <div>
+                      <label className="mb-1 block text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--accent)' }}>Start Date</label>
+                      <Input
+                        type="date"
+                        value={detailsDraft.start_date}
+                        onChange={(e) => setDetailsDraft({ ...detailsDraft, start_date: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--accent)' }}>End Date</label>
+                      <Input
+                        type="date"
+                        value={detailsDraft.end_date}
+                        onChange={(e) => setDetailsDraft({ ...detailsDraft, end_date: e.target.value })}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--accent)' }}>Nights</label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={detailsDraft.duration_nights}
+                      onChange={(e) => setDetailsDraft({ ...detailsDraft, duration_nights: e.target.value })}
+                      placeholder="7"
+                    />
+                  </div>
+                )}
             </div>
 
             <div className="mt-4 flex gap-2">
@@ -358,139 +358,145 @@ export function TripDetail({ embedded }: { embedded?: boolean } = {}) {
 
         <div>
           <h2 className="vault-section__title">Logistics</h2>
-          <div className="vault-section__body">
-            <div className="flex items-center justify-between gap-2" style={{ marginBottom: 12 }}>
-              <div className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Flights</div>
-              <Button type="button" variant="secondary" size="sm" onClick={() => void addFlight()} disabled={savingLogistics}>
-                Add Flight
-              </Button>
+          <div className="space-y-8">
+            {/* Flights Section */}
+            <div className="rounded-xl border p-5" style={{ background: 'var(--card-surface)', borderColor: 'var(--border-color)' }}>
+              <div className="mb-4 flex items-center justify-between">
+                <div className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--accent)' }}>Flights</div>
+                <Button type="button" variant="secondary" size="sm" onClick={() => void addFlight()} disabled={savingLogistics}>
+                  Add Flight
+                </Button>
+              </div>
+              {flights.length === 0 ? (
+                <div className="rounded-xl border border-dashed p-6 text-center text-sm" style={{ color: 'var(--text-muted)', borderColor: 'var(--border-color)' }}>
+                  No flights yet.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {flights.map((f) => (
+                    <div key={f.id} className="rounded-xl p-4" style={{ border: '1px solid var(--border-color)' }}>
+                      <div className="grid gap-3 md:grid-cols-3">
+                        <Input
+                          value={f.flight_number ?? ''}
+                          onChange={(e) => void updateFlight(f.id, { flight_number: e.target.value })}
+                          placeholder="Flight #"
+                        />
+                        <Input
+                          value={f.airline ?? ''}
+                          onChange={(e) => void updateFlight(f.id, { airline: e.target.value })}
+                          placeholder="Airline"
+                        />
+                        <Input
+                          value={f.status ?? ''}
+                          onChange={(e) => void updateFlight(f.id, { status: e.target.value })}
+                          placeholder="Status"
+                        />
+                        <Input
+                          value={f.depart_airport ?? ''}
+                          onChange={(e) => void updateFlight(f.id, { depart_airport: e.target.value })}
+                          placeholder="From (airport)"
+                        />
+                        <Input
+                          value={f.arrive_airport ?? ''}
+                          onChange={(e) => void updateFlight(f.id, { arrive_airport: e.target.value })}
+                          placeholder="To (airport)"
+                        />
+                        <Input
+                          value={f.confirmation_number ?? ''}
+                          onChange={(e) => void updateFlight(f.id, { confirmation_number: e.target.value })}
+                          placeholder="Confirmation #"
+                        />
+                      </div>
+                      <div className="mt-3 flex justify-end">
+                        <Button type="button" variant="secondary" size="sm" onClick={() => void deleteFlight(f.id)}>
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {flights.length === 0 ? (
-              <div className="rounded-xl border border-dashed p-4 text-center text-sm" style={{ color: 'var(--text-muted)', borderColor: 'var(--border-color)' }}>
-                No flights yet.
+            {/* Stays Section */}
+            <div className="rounded-xl border p-5" style={{ background: 'var(--card-surface)', borderColor: 'var(--border-color)' }}>
+              <div className="mb-4 flex items-center justify-between">
+                <div className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--accent)' }}>Stays</div>
+                <Button type="button" variant="secondary" size="sm" onClick={() => void addStay()} disabled={savingLogistics}>
+                  Add Stay
+                </Button>
               </div>
-            ) : (
-              <div className="space-y-3" style={{ marginBottom: 20 }}>
-                {flights.map((f) => (
-                  <div key={f.id} className="rounded-xl p-4" style={{ border: '1px solid var(--border-color)' }}>
-                    <div className="grid gap-3 md:grid-cols-3">
-                      <Input
-                        value={f.flight_number ?? ''}
-                        onChange={(e) => void updateFlight(f.id, { flight_number: e.target.value })}
-                        placeholder="Flight #"
-                      />
-                      <Input
-                        value={f.airline ?? ''}
-                        onChange={(e) => void updateFlight(f.id, { airline: e.target.value })}
-                        placeholder="Airline"
-                      />
-                      <Input
-                        value={f.status ?? ''}
-                        onChange={(e) => void updateFlight(f.id, { status: e.target.value })}
-                        placeholder="Status"
-                      />
-                      <Input
-                        value={f.depart_airport ?? ''}
-                        onChange={(e) => void updateFlight(f.id, { depart_airport: e.target.value })}
-                        placeholder="From (airport)"
-                      />
-                      <Input
-                        value={f.arrive_airport ?? ''}
-                        onChange={(e) => void updateFlight(f.id, { arrive_airport: e.target.value })}
-                        placeholder="To (airport)"
-                      />
-                      <Input
-                        value={f.confirmation_number ?? ''}
-                        onChange={(e) => void updateFlight(f.id, { confirmation_number: e.target.value })}
-                        placeholder="Confirmation #"
-                      />
+              {stays.length === 0 ? (
+                <div className="rounded-xl border border-dashed p-6 text-center text-sm" style={{ color: 'var(--text-muted)', borderColor: 'var(--border-color)' }}>
+                  No stays yet.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {stays.map((s) => (
+                    <div key={s.id} className="rounded-xl p-4" style={{ border: '1px solid var(--border-color)' }}>
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <Input
+                          value={s.name ?? ''}
+                          onChange={(e) => void updateStay(s.id, { name: e.target.value })}
+                          placeholder="Hotel / Stay name"
+                        />
+                        <Input
+                          value={s.check_in_time ?? ''}
+                          onChange={(e) => void updateStay(s.id, { check_in_time: e.target.value })}
+                          placeholder="Check-in time"
+                        />
+                        <Input
+                          value={s.address ?? ''}
+                          onChange={(e) => void updateStay(s.id, { address: e.target.value })}
+                          placeholder="Address"
+                        />
+                        <Input
+                          value={s.check_out_time ?? ''}
+                          onChange={(e) => void updateStay(s.id, { check_out_time: e.target.value })}
+                          placeholder="Check-out time"
+                        />
+                        <Input
+                          value={s.confirmation_number ?? ''}
+                          onChange={(e) => void updateStay(s.id, { confirmation_number: e.target.value })}
+                          placeholder="Confirmation #"
+                        />
+                      </div>
+                      <div className="mt-3 flex justify-end">
+                        <Button type="button" variant="secondary" size="sm" onClick={() => void deleteStay(s.id)}>
+                          Remove
+                        </Button>
+                      </div>
                     </div>
-                    <div className="mt-3 flex justify-end">
-                      <Button type="button" variant="secondary" size="sm" onClick={() => void deleteFlight(f.id)}>
-                        Remove
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="flex items-center justify-between gap-2" style={{ marginBottom: 12 }}>
-              <div className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Stays</div>
-              <Button type="button" variant="secondary" size="sm" onClick={() => void addStay()} disabled={savingLogistics}>
-                Add Stay
-              </Button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {stays.length === 0 ? (
-              <div className="rounded-xl border border-dashed p-4 text-center text-sm" style={{ color: 'var(--text-muted)', borderColor: 'var(--border-color)' }}>
-                No stays yet.
+            {/* Transport Section */}
+            <div className="rounded-xl border p-5" style={{ background: 'var(--card-surface)', borderColor: 'var(--border-color)' }}>
+              <div className="mb-4 text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--accent)' }}>
+                Transport
               </div>
-            ) : (
-              <div className="space-y-3" style={{ marginBottom: 20 }}>
-                {stays.map((s) => (
-                  <div key={s.id} className="rounded-xl p-4" style={{ border: '1px solid var(--border-color)' }}>
-                    <div className="grid gap-3 md:grid-cols-2">
-                      <Input
-                        value={s.name ?? ''}
-                        onChange={(e) => void updateStay(s.id, { name: e.target.value })}
-                        placeholder="Hotel / Stay name"
-                      />
-                      <Input
-                        value={s.check_in_time ?? ''}
-                        onChange={(e) => void updateStay(s.id, { check_in_time: e.target.value })}
-                        placeholder="Check-in time"
-                      />
-                      <Input
-                        value={s.address ?? ''}
-                        onChange={(e) => void updateStay(s.id, { address: e.target.value })}
-                        placeholder="Address"
-                      />
-                      <Input
-                        value={s.check_out_time ?? ''}
-                        onChange={(e) => void updateStay(s.id, { check_out_time: e.target.value })}
-                        placeholder="Check-out time"
-                      />
-                      <Input
-                        value={s.confirmation_number ?? ''}
-                        onChange={(e) => void updateStay(s.id, { confirmation_number: e.target.value })}
-                        placeholder="Confirmation #"
-                      />
-                    </div>
-                    <div className="mt-3 flex justify-end">
-                      <Button type="button" variant="secondary" size="sm" onClick={() => void deleteStay(s.id)}>
-                        Remove
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+              <textarea
+                className="w-full rounded-lg border p-3 text-sm"
+                style={{ borderColor: 'var(--border-color)', background: 'var(--input-surface, var(--card-surface))', color: 'var(--text-main)' }}
+                rows={4}
+                value={detailsDraft.transport_notes}
+                onChange={(e) => setDetailsDraft({ ...detailsDraft, transport_notes: e.target.value })}
+                placeholder="Train passes, car rental, notes..."
+              />
+              <div className="mt-3">
+                <Button type="button" variant="secondary" size="sm" onClick={() => void saveDetails()} disabled={savingDetails}>
+                  {savingDetails ? 'Saving...' : 'Save Transport Notes'}
+                </Button>
               </div>
-            )}
-
-            <div className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)', marginBottom: 8 }}>
-              Transport
-            </div>
-            <textarea
-              className="w-full rounded-lg border p-2 text-sm"
-              style={{ borderColor: 'var(--border-color)', background: 'var(--input-surface, var(--card-surface))', color: 'var(--text-main)' }}
-              rows={4}
-              value={detailsDraft.transport_notes}
-              onChange={(e) => setDetailsDraft({ ...detailsDraft, transport_notes: e.target.value })}
-              placeholder="Train passes, car rental, notes..."
-            />
-
-            <div className="mt-4">
-              <Button type="button" variant="secondary" size="sm" onClick={() => void saveDetails()} disabled={savingDetails}>
-                {savingDetails ? 'Saving...' : 'Save Transport Notes'}
-              </Button>
             </div>
           </div>
         </div>
 
         <section>
           <h2 className="vault-section__title">Document Vault</h2>
-          <div className="vault-section__body">
+          <div className="rounded-xl border p-5" style={{ background: 'var(--card-surface)', borderColor: 'var(--border-color)' }}>
             <div className="mb-3 flex gap-2">
               <Input
                 value={receiptDraft.title}

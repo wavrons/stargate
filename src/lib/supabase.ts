@@ -53,8 +53,18 @@ export type Trip = {
   id: string;
   user_id: string;
   title: string;
+  cover_image_url?: string;
   start_date?: string;
   end_date?: string;
+  date_mode?: 'fixed' | 'flex';
+  duration_nights?: number;
+  flight_number?: string;
+  flight_airline?: string;
+  flight_status?: string;
+  stay_name?: string;
+  stay_address?: string;
+  stay_checkin_time?: string;
+  transport_notes?: string;
   flex_day_count?: number;
   version: number;
   storage_used_bytes: number;

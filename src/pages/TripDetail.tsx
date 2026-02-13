@@ -15,6 +15,21 @@ export function TripDetail({ embedded }: { embedded?: boolean } = {}) {
   const navigate = useNavigate();
   
   const [trip, setTrip] = useState<Trip | null>(null);
+  const [detailsDraft, setDetailsDraft] = useState({
+    cover_image_url: '',
+    date_mode: 'fixed' as 'fixed' | 'flex',
+    start_date: '',
+    end_date: '',
+    duration_nights: '',
+    flight_number: '',
+    flight_airline: '',
+    flight_status: '',
+    stay_name: '',
+    stay_address: '',
+    stay_checkin_time: '',
+    transport_notes: '',
+  });
+  const [savingDetails, setSavingDetails] = useState(false);
   const [items, setItems] = useState<TripItem[]>([]);
   const [attachments, setAttachments] = useState<TripAttachment[]>([]);
   const [receiptDraft, setReceiptDraft] = useState({ title: '', url: '' });
@@ -73,12 +88,74 @@ export function TripDetail({ embedded }: { embedded?: boolean } = {}) {
     if (id) fetchTripData(id);
   }, [id, fetchTripData]);
 
+  useEffect(() => {
+    if (!trip) return;
+    setDetailsDraft({
+      cover_image_url: trip.cover_image_url ?? '',
+      date_mode: trip.date_mode ?? 'fixed',
+      start_date: trip.start_date ?? '',
+      end_date: trip.end_date ?? '',
+      duration_nights: typeof trip.duration_nights === 'number' ? String(trip.duration_nights) : '',
+      flight_number: trip.flight_number ?? '',
+      flight_airline: trip.flight_airline ?? '',
+      flight_status: trip.flight_status ?? '',
+      stay_name: trip.stay_name ?? '',
+      stay_address: trip.stay_address ?? '',
+      stay_checkin_time: trip.stay_checkin_time ?? '',
+      transport_notes: trip.transport_notes ?? '',
+    });
+  }, [trip]);
+
   const handleRefresh = useCallback(() => {
     if (id) {
       void fetchTripData(id);
       acknowledge();
     }
   }, [id, fetchTripData, acknowledge]);
+
+  const saveDetails = async () => {
+    if (!id) return;
+    setSavingDetails(true);
+    setErrorMsg(null);
+
+    try {
+      const payload: Record<string, any> = {
+        cover_image_url: detailsDraft.cover_image_url || null,
+        date_mode: detailsDraft.date_mode,
+        flight_number: detailsDraft.flight_number || null,
+        flight_airline: detailsDraft.flight_airline || null,
+        flight_status: detailsDraft.flight_status || null,
+        stay_name: detailsDraft.stay_name || null,
+        stay_address: detailsDraft.stay_address || null,
+        stay_checkin_time: detailsDraft.stay_checkin_time || null,
+        transport_notes: detailsDraft.transport_notes || null,
+      };
+
+      if (detailsDraft.date_mode === 'fixed') {
+        payload.start_date = detailsDraft.start_date || null;
+        payload.end_date = detailsDraft.end_date || null;
+        payload.duration_nights = null;
+      } else {
+        payload.start_date = null;
+        payload.end_date = null;
+        payload.duration_nights = detailsDraft.duration_nights ? Number(detailsDraft.duration_nights) : null;
+      }
+
+      const { data, error } = await supabase
+        .from('trips')
+        .update(payload)
+        .eq('id', id)
+        .select('*')
+        .single();
+
+      if (error) throw error;
+      setTrip((data as Trip) ?? null);
+    } catch (e: any) {
+      setErrorMsg(e.message ?? 'Failed to save details.');
+    } finally {
+      setSavingDetails(false);
+    }
+  };
 
   const onAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -258,6 +335,147 @@ export function TripDetail({ embedded }: { embedded?: boolean } = {}) {
       )}
 
       <div className="space-y-6">
+        <section>
+          <h2 className="mb-3 text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>Trip Meta</h2>
+          <div className="rounded-xl p-5" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-medium">Cover Image URL</label>
+                <Input
+                  value={detailsDraft.cover_image_url}
+                  onChange={(e) => setDetailsDraft({ ...detailsDraft, cover_image_url: e.target.value })}
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-sm font-medium">Dates</label>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={detailsDraft.date_mode === 'fixed' ? 'primary' : 'secondary'}
+                    size="sm"
+                    onClick={() => setDetailsDraft({ ...detailsDraft, date_mode: 'fixed' })}
+                  >
+                    Fixed Dates
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={detailsDraft.date_mode === 'flex' ? 'primary' : 'secondary'}
+                    size="sm"
+                    onClick={() => setDetailsDraft({ ...detailsDraft, date_mode: 'flex' })}
+                  >
+                    Duration
+                  </Button>
+                </div>
+              </div>
+
+              {detailsDraft.date_mode === 'fixed' ? (
+                <>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">Start Date</label>
+                    <Input
+                      type="date"
+                      value={detailsDraft.start_date}
+                      onChange={(e) => setDetailsDraft({ ...detailsDraft, start_date: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">End Date</label>
+                    <Input
+                      type="date"
+                      value={detailsDraft.end_date}
+                      onChange={(e) => setDetailsDraft({ ...detailsDraft, end_date: e.target.value })}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <label className="mb-1 block text-sm font-medium">Nights</label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={detailsDraft.duration_nights}
+                    onChange={(e) => setDetailsDraft({ ...detailsDraft, duration_nights: e.target.value })}
+                    placeholder="7"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 flex gap-2">
+              <Button type="button" onClick={() => void saveDetails()} disabled={savingDetails}>
+                {savingDetails ? 'Saving...' : 'Save Details'}
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>Logistics</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl p-4" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+              <div className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Flight</div>
+              <div className="space-y-2">
+                <Input
+                  value={detailsDraft.flight_number}
+                  onChange={(e) => setDetailsDraft({ ...detailsDraft, flight_number: e.target.value })}
+                  placeholder="Flight #"
+                />
+                <Input
+                  value={detailsDraft.flight_airline}
+                  onChange={(e) => setDetailsDraft({ ...detailsDraft, flight_airline: e.target.value })}
+                  placeholder="Airline"
+                />
+                <Input
+                  value={detailsDraft.flight_status}
+                  onChange={(e) => setDetailsDraft({ ...detailsDraft, flight_status: e.target.value })}
+                  placeholder="Status"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl p-4" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+              <div className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Stay</div>
+              <div className="space-y-2">
+                <Input
+                  value={detailsDraft.stay_name}
+                  onChange={(e) => setDetailsDraft({ ...detailsDraft, stay_name: e.target.value })}
+                  placeholder="Hotel"
+                />
+                <Input
+                  value={detailsDraft.stay_address}
+                  onChange={(e) => setDetailsDraft({ ...detailsDraft, stay_address: e.target.value })}
+                  placeholder="Address"
+                />
+                <Input
+                  value={detailsDraft.stay_checkin_time}
+                  onChange={(e) => setDetailsDraft({ ...detailsDraft, stay_checkin_time: e.target.value })}
+                  placeholder="Check-in time"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl p-4" style={{ background: 'var(--card-surface)', border: '1px solid var(--border-color)' }}>
+              <div className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Transport</div>
+              <textarea
+                className="w-full rounded-lg border p-2 text-sm"
+                style={{ borderColor: 'var(--border-color)', background: 'var(--input-surface, var(--card-surface))', color: 'var(--text-main)' }}
+                rows={6}
+                value={detailsDraft.transport_notes}
+                onChange={(e) => setDetailsDraft({ ...detailsDraft, transport_notes: e.target.value })}
+                placeholder="Train passes, car rental, notes..."
+              />
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <Button type="button" variant="secondary" size="sm" onClick={() => void saveDetails()} disabled={savingDetails}>
+              {savingDetails ? 'Saving...' : 'Save Logistics'}
+            </Button>
+          </div>
+        </section>
+
         <section>
           <h2 className="mb-3 text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>Document Vault</h2>
           <div className="mb-3 flex gap-2">

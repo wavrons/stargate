@@ -28,7 +28,7 @@
   },
   "waitlist": {
     "title": "加入候補名單",
-    "description": "申請使用 Stargate。我們會審核您的申請並發送邀請碼。",
+    "description": "申請使用 Lyra。我們會審核您的申請並發送邀請碼。",
     "name": "姓名",
     "email": "電子郵件",
     "message": "為什麼想加入？",

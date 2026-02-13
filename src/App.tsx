@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from './components/Button';
+import { Footer } from './components/Footer';
 import { SFGlobe, SFCheckmark } from './components/SFSymbols';
 import { supabase } from './lib/supabase';
 import { Auth } from './pages/Auth';
@@ -449,6 +450,7 @@ function AuthedApp({ onLogout }: { onLogout: () => void }) {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 }
@@ -705,13 +707,16 @@ function App() {
       )}
       {/* Public routes: Home (quote) and Auth are accessible without login */}
       {!session && (
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<Auth onAuth={() => {}} />} />
-          <Route path="/auth/update-password" element={<UpdatePassword />} />
-          <Route path="/waitlist" element={<Waitlist />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/auth" element={<Auth onAuth={() => {}} />} />
+            <Route path="/auth/update-password" element={<UpdatePassword />} />
+            <Route path="/waitlist" element={<Waitlist />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          <Footer />
+        </>
       )}
       {/* Authenticated routes */}
       {session && (themeReady || needsOnboarding === false) && !needsOnboarding && (

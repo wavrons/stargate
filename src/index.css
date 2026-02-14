@@ -985,9 +985,8 @@ nav a:hover {
 }
 
 .board-preview-toggle {
-  position: fixed;
-  top: 38%;
-  right: -18px;
+  position: sticky;
+  top: 50%;
   transform: translateY(-50%);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-control);
@@ -998,18 +997,15 @@ nav a:hover {
   justify-content: center;
   background: var(--card-surface);
   color: var(--text-main);
-  transition: right 250ms ease, border-color 200ms ease;
+  transition: border-color 200ms ease;
   z-index: 41;
+  margin-left: -18px;
 }
 
 .board-preview-toggle__icon {
   width: 16px;
   height: 16px;
   transition: transform 200ms ease;
-}
-
-.board-preview-toggle[data-open] {
-  right: calc(var(--preview-panel-width) - 18px);
 }
 
 .board-preview-toggle[data-open] .board-preview-toggle__icon {
@@ -1705,10 +1701,10 @@ nav a:hover {
 }
 
 .vault-section__body {
-  border-radius: var(--radius-card);
-  padding: 20px;
-  background: var(--card-surface);
-  border: 1px solid var(--border-color);
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
 }
 
 .public-portal {
